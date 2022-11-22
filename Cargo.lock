@@ -197,10 +197,8 @@ dependencies = [
  "bevy",
  "bevy_ecs_ldtk",
  "bevy_rapier2d",
- "bevy_sepax2d",
  "iyes_loopless",
  "rand",
- "sepax2d",
 ]
 
 [[package]]
@@ -713,16 +711,6 @@ dependencies = [
  "serde",
  "thiserror",
  "uuid",
-]
-
-[[package]]
-name = "bevy_sepax2d"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7c9462db8d53ced651fa9e0aada8979b4ed23ecf5dbec156af5fe3a4637de811"
-dependencies = [
- "bevy",
- "sepax2d",
 ]
 
 [[package]]
@@ -2870,12 +2858,6 @@ name = "scopeguard"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d29ab0c6d3fc0ee92fe66e2d99f700eab17a8d57d1c1d3b748380fb20baa78cd"
-
-[[package]]
-name = "sepax2d"
-version = "0.3.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3925324849acde7d173737887cd3f78a1b6c587d6eedbadc4e334f45259e7720"
 
 [[package]]
 name = "serde"
