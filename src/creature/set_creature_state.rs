@@ -1,14 +1,16 @@
 
 use bevy::prelude::*;
 use rand::{thread_rng, Rng};
-use heron::rapier_plugin::{PhysicsWorld, ShapeCastCollisionType};
-use heron::{CollisionLayers, CollisionShape};
+use bevy_rapier2d::{
+    prelude::{Collider, InteractionGroups, QueryFilter, RapierContext, TOIStatus},
+    rapier::prelude::Group,
+};
+
 use crate::creature::Creature;
 use crate::creature::CreatureState;
 use crate::creature::CreatureStateVariables;
 use crate::creature::CreatureMoveState;
 
-use crate::world::ColliderTypes;
 use crate::player::StealthMode;
 use crate::player::Player;
 
@@ -18,9 +20,9 @@ use crate::player::Player;
 
 pub fn set_creature_state (
     mut commands: Commands,
-    mut query: Query<(Entity, &CollisionShape, &Transform, &mut CreatureState, &mut CreatureStateVariables), With<Creature>>,
+    mut query: Query<(Entity, &Collider, &Transform, &mut CreatureState, &mut CreatureStateVariables), With<Creature>>,
     query_player: Query<&StealthMode, With<Player>>,
-    physics_world: PhysicsWorld,
+    rapier_context: Res<RapierContext>,
 ) {
     let mut rng = thread_rng();
 
@@ -38,49 +40,45 @@ pub fn set_creature_state (
         if state.new.0 == CreatureMoveState::Chase && state.old.0 != CreatureMoveState::Chase {
             var.attack_range_offset = rng.gen_range(0.0..=6.0);
         }
-
-        let look_right = physics_world.shape_cast_with_filter(
+        
+        let look_right = rapier_context.cast_shape(
+            transform.translation.truncate(),
+            0.0,
+            Vec2::new(aggro_range, 0.0),
             collider,
-            transform.translation,
-            transform.rotation,
-            Vec3::new(aggro_range, 0.0, 0.0),
-            CollisionLayers::none()
-            .with_group(ColliderTypes::Enemy)
-            .with_mask(ColliderTypes::Player),
-            |_enityty| true,
+            1.0,
+            QueryFilter::default()
+            .groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_2))
         );
     
-        let look_left = physics_world.shape_cast_with_filter(
+        let look_left = rapier_context.cast_shape(
+            transform.translation.truncate(),
+            0.0,
+            Vec2::new(-aggro_range, 0.0),
             collider,
-            transform.translation,
-            transform.rotation,
-            Vec3::new(-aggro_range, 0.0, 0.0),
-            CollisionLayers::none()
-            .with_group(ColliderTypes::Enemy)
-            .with_mask(ColliderTypes::Player),
-            |_enityty| true,
+            1.0,
+            QueryFilter::default()
+            .groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_2))
         );
 
-        let attack_range_right = physics_world.shape_cast_with_filter(
+        let attack_range_right = rapier_context.cast_shape(
+            transform.translation.truncate(),
+            0.0,
+            Vec2::new(attack_range + var.attack_range_offset, 0.0),
             collider,
-            transform.translation,
-            transform.rotation,
-            Vec3::new(attack_range + var.attack_range_offset, 0.0, 0.0),
-            CollisionLayers::none()
-            .with_group(ColliderTypes::Enemy)
-            .with_mask(ColliderTypes::Player),
-            |_enityty| true,
+            1.0,
+            QueryFilter::default()
+            .groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_2))
         );
     
-        let attack_range_left = physics_world.shape_cast_with_filter(
+        let attack_range_left = rapier_context.cast_shape(
+            transform.translation.truncate(),
+            0.0,
+            Vec2::new(-attack_range - var.attack_range_offset, 0.0),
             collider,
-            transform.translation,
-            transform.rotation,
-            Vec3::new(-attack_range - var.attack_range_offset, 0.0, 0.0),
-            CollisionLayers::none()
-            .with_group(ColliderTypes::Enemy)
-            .with_mask(ColliderTypes::Player),
-            |_enityty| true,
+            1.0,
+            QueryFilter::default()
+            .groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_2))
         );
 
 
@@ -112,32 +110,30 @@ pub fn set_creature_state (
             if ((look_right.is_some() || look_left.is_some()) && !(attack_range_right.is_some() || attack_range_left.is_some())) && !stealth.active {
 
                 if look_right.is_some() {
-                    let collision_right = physics_world.shape_cast_with_filter(
+                    let collision_right = rapier_context.cast_shape(
+                        transform.translation.truncate(),
+                        0.0, 
+                        Vec2::new(aggro_range, 0.0),
                         collider,
-                        transform.translation,
-                        transform.rotation,
-                        Vec3::new(aggro_range, 0.0, 0.0),
-                        CollisionLayers::none()
-                        .with_group(ColliderTypes::Enemy)
-                        .with_mask(ColliderTypes::World),
-                        |_enityty| true,
+                        1.0,
+                        QueryFilter::default()
+                        .groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_1))
                     );
 
-                    if let Some(collision_wall) = collision_right {
-                        if let ShapeCastCollisionType::Collided(infowall) = collision_wall.collision_type {
-                            let look_right = physics_world.shape_cast_with_filter(
+                    if let Some((wall, toi1)) = collision_right {
+                        if let TOIStatus::Converged = toi1.status {
+                            let look_right = rapier_context.cast_shape(
+                                transform.translation.truncate(),
+                                0.0,
+                                Vec2::new(aggro_range, 0.0),
                                 collider,
-                                transform.translation,
-                                transform.rotation,
-                                Vec3::new(aggro_range, 0.0, 0.0),
-                                CollisionLayers::none()
-                                .with_group(ColliderTypes::Enemy)
-                                .with_mask(ColliderTypes::Player),
-                                |_enityty| true,
+                                1.0,
+                                QueryFilter::default()
+                                .groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_2))
                             );
-                            if let Some(collision_player) = look_right {
-                                if let ShapeCastCollisionType::Collided(infoplayer) = collision_player.collision_type {
-                                    if (infoplayer.self_end_position.x  - transform.translation.x).abs() < (infowall.self_end_position.x - transform.translation.x).abs() {
+                            if let Some((player, toi2)) = look_right {
+                                if let TOIStatus::Converged = toi2.status {
+                                    if (toi2.witness2.x - transform.translation.x).abs() < (toi1.witness2.x - transform.translation.x).abs() {
                                         state.old.0 = state.new.0;
                                         state.new.0 = CreatureMoveState::Chase;
                                         var.chase_direction = 1.0;
@@ -159,32 +155,30 @@ pub fn set_creature_state (
                 }
 
                 if look_left.is_some() {
-                    let collision_left = physics_world.shape_cast_with_filter(
+                    let collision_left = rapier_context.cast_shape(
+                        transform.translation.truncate(),
+                        0.0,
+                        Vec2::new(-aggro_range, 0.0),
                         collider,
-                        transform.translation,
-                        transform.rotation,
-                        Vec3::new(-aggro_range, 0.0, 0.0),
-                        CollisionLayers::none()
-                        .with_group(ColliderTypes::Enemy)
-                        .with_mask(ColliderTypes::World),
-                        |_enityty| true,
+                        1.0,
+                        QueryFilter::default()
+                        .groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_1))
                     );
 
-                    if let Some(collision_wall) = collision_left {
-                        if let ShapeCastCollisionType::Collided(infowall) = collision_wall.collision_type {
-                            let look_left = physics_world.shape_cast_with_filter(
+                    if let Some((wall, toi1)) = collision_left {
+                        if let TOIStatus::Converged = toi1.status {
+                            let look_left = rapier_context.cast_shape(
+                                transform.translation.truncate(),
+                                0.0,
+                                Vec2::new(-aggro_range, 0.0),
                                 collider,
-                                transform.translation,
-                                transform.rotation,
-                                Vec3::new(-aggro_range, 0.0, 0.0),
-                                CollisionLayers::none()
-                                .with_group(ColliderTypes::Enemy)
-                                .with_mask(ColliderTypes::Player),
-                                |_enityty| true,
+                                1.0,
+                                QueryFilter::default()
+                                .groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_2))
                             );
-                            if let Some(collision_player) = look_left {
-                                if let ShapeCastCollisionType::Collided(infoplayer) = collision_player.collision_type {
-                                    if (infoplayer.self_end_position.x  - transform.translation.x).abs() < (infowall.self_end_position.x - transform.translation.x).abs() {
+                            if let Some(((player, toi2))) = look_left {
+                                if let TOIStatus::Converged = toi2.status {
+                                    if (toi2.witness2.x  - transform.translation.x).abs() < (toi1.witness2.x - transform.translation.x).abs() {
                                         state.old.0 = state.new.0;
                                         state.new.0 = CreatureMoveState::Chase;
                                         var.chase_direction = -1.0;

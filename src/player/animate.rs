@@ -60,7 +60,7 @@ pub fn animate(
         }
 
         
-        dbg!(sprite.index);
+        //dbg!(sprite.index);
 
     }
     

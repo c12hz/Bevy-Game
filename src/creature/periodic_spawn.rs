@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use bevy::prelude::*;
-use heron::prelude::*;
+use bevy_rapier2d::prelude::{Collider, CollisionGroups, Group, RigidBody};
 use bevy_ecs_ldtk::prelude::*;
 
 use crate::creature::Creature;
@@ -16,7 +16,7 @@ use crate::creature::CreatureAnimationState;
 use crate::creature::CreatureState;
 use crate::creature::CreatureStateVariables;
 use crate::creature::CreatureStats;
-use crate::world::ColliderTypes;
+
 use crate::creature::CreatureSpawnPoint;
 
 use super::CreatureGraphicsEntity;
@@ -88,8 +88,8 @@ pub fn periodic_spawn(
                             life: 192.0,
                         })
                         .insert(RigidBody::KinematicPositionBased)
-                        .insert(CollisionShape::Cuboid { half_extends: Vec3::new(9.0, 5.0, 0.0), border_radius: None})
-                        .insert(CollisionLayers::none().with_group(ColliderTypes::Enemy).with_masks(&[ColliderTypes::World, ColliderTypes::Player]))
+                        .insert(Collider::cuboid(9.0, 5.0))
+                        .insert(CollisionGroups::new(Group::GROUP_3, Group::GROUP_1 | Group::GROUP_2))
                         .id();
 
 

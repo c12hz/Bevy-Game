@@ -1,7 +1,6 @@
 use std::time::Duration;
 
 use bevy::prelude::*;
-use heron::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
 use crate::creature::Creature;
@@ -17,7 +16,6 @@ use crate::creature::CreatureState;
 use crate::creature::CreatureStateVariables;
 use crate::creature::CreatureSpawnPoint;
 use crate::creature::CreatureStats;
-use crate::world::ColliderTypes;
 
 use super::CreatureGraphicsEntity;
 use super::CreatureUsefulVariables;
