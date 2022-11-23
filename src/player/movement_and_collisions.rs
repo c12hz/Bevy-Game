@@ -10,10 +10,10 @@ use crate::player::PlayerState;
 use crate::player::PlayerMoveState;
 
 pub fn movement_and_collisions(
-    mut queryyy: Query<(&mut Transform, &Collider, &Vel, &PlayerState), With<Player>>,
+    mut queryyy: Query<(Entity, &mut Transform, &Collider, &Vel, &PlayerState), With<Player>>,
     rapier_context: Res<RapierContext>){
 
-    for (mut transform, collider, velocity, state) in queryyy.iter_mut() {
+    for (entity, mut transform, collider, velocity, state) in queryyy.iter_mut() {
         let mut velocity_vector = Vec2::new(velocity.x, velocity.y);
         let mut direction_vector = Vec3::new(0.0, 0.0, 0.0);
         if velocity_vector.x > 0.0 {
@@ -42,11 +42,14 @@ pub fn movement_and_collisions(
                 velocity_vector,
                 collider,
                 1.0,
-                QueryFilter::default()
+                QueryFilter {
+                    exclude_rigid_body: Some(entity),
+                    ..QueryFilter::default()
+                }
                 .groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_1))
             );
 
-            if let Some((collision, toi)) = hit {
+            if let Some((_collision, toi)) = hit {
                 if let TOIStatus::Converged = toi.status {
                     if iter == 3 {
                         velocity_vector = Vec2::ZERO;
@@ -55,7 +58,7 @@ pub fn movement_and_collisions(
                     let cross = Vec3::new(toi.normal2.x, toi.normal2.y, 0.0).cross(Vec3::Z);
                     velocity_vector = (cross * (cross.dot(Vec3::new(velocity_vector.x, velocity_vector.y, 0.0)))).truncate();
                     //dbg!(info.self_end_position);
-                    transform.translation = toi.witness2.extend(0.0) - direction_vector;
+                    //transform.translation = toi.witness2.extend(0.0) - direction_vector;
                     collided = true;
                 } else if let TOIStatus::Penetrating = toi.status {
                 }
