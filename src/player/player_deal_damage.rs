@@ -51,16 +51,16 @@ pub fn player_deal_damage (
                                 Vec2::new(whirl_cast - whirl_offset, 0.0),
                                 collider,
                                 1.0,
-                                QueryFilter::exclude_dynamic()
+                                QueryFilter::default()
                                 .groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_1))
-                                .exclude_collider()
-                                |e| {
+                                .predicate(
+                                &|e| {
                                     !targets_right.iter().any(|t| *t == e)
-                                },
+                                }),
                             );
 
-                            if let Some(collision) = hit_whirl_right {
-                                targets_right.push(collision.entity);
+                            if let Some((entity,toii)) = hit_whirl_right {
+                                targets_right.push(entity);
                             } else {
                                 break;
                             }
@@ -75,21 +75,22 @@ pub fn player_deal_damage (
 
                     if (sprite.index == 1 && sprite.flip_x == true) || (sprite.index == 3 && sprite.flip_x == false) {
                         loop {
-                            let hit_whirl_left = physics_world.shape_cast_with_filter(
+                            let hit_whirl_left = rapier_context.cast_shape(
+                                Vec2::new(transform.translation.x, transform.translation.y) + Vec2::new(-whirl_offset, 0.0),
+                                0.0,
+                                Vec2::new(-whirl_cast + whirl_offset, 0.0),
                                 collider,
-                                transform.translation + Vec3::new(-whirl_offset, 0.0, 0.0),
-                                transform.rotation,
-                                Vec3::new(-whirl_cast + whirl_offset, 0.0, 0.0),
-                                CollisionLayers::none()
-                                .with_group(ColliderTypes::Player)
-                                .with_mask(ColliderTypes::Enemy),
-                                |e| {
+                                1.0,
+                                QueryFilter::default()
+                                .groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_1))
+                                .predicate(
+                                &|e| {
                                     !targets_left.iter().any(|t| *t == e)
-                                },
+                                }),
                             );
 
-                            if let Some(collision) = hit_whirl_left {
-                                targets_left.push(collision.entity);
+                            if let Some((entity, toii)) = hit_whirl_left {
+                                targets_left.push(entity);
                             } else {
                                 break;
                             }

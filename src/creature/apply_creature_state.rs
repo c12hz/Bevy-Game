@@ -1,7 +1,10 @@
 use bevy::prelude::*;
 use rand::{thread_rng, Rng};
-use heron::rapier_plugin::PhysicsWorld;
-use heron::{CollisionLayers, CollisionShape};
+use bevy_rapier2d::{
+    prelude::{Collider, InteractionGroups, QueryFilter, RapierContext, TOIStatus},
+    rapier::prelude::Group,
+};
+
 use crate::creature::Creature;
 use crate::creature::CreatureGraphics;
 use crate::creature::CreatureState;
@@ -11,7 +14,6 @@ use crate::creature::Vel;
 use crate::creature::MoveSpeed;
 use crate::creature::CreatureMoveState;
 
-use crate::world::ColliderTypes;
 use crate::player::Player;
 
 use super::CreatureGraphicsEntity;
@@ -20,10 +22,10 @@ use super::CreatureGraphicsEntity;
 
 
 pub fn apply_creature_state (
-    mut query: Query<(&CollisionShape, &mut CreatureUsefulVariables, &Transform, &mut Vel, &MoveSpeed, &CreatureState, &CreatureStateVariables, &CreatureGraphicsEntity), With<Creature>>,
+    mut query: Query<(&Collider, &mut CreatureUsefulVariables, &Transform, &mut Vel, &MoveSpeed, &CreatureState, &CreatureStateVariables, &CreatureGraphicsEntity), With<Creature>>,
     mut query2: Query<&mut TextureAtlasSprite, With<CreatureGraphics>>,
     mut query_player: Query<&Transform, With<Player>>,
-    physics_world: PhysicsWorld,
+    rapier_context: Res<RapierContext>,
     mut reset_velocity: Local<bool>,
     mut chase_delay: Local<u32>,
 ) {
@@ -42,26 +44,24 @@ pub fn apply_creature_state (
 
                 if state.new.0 == CreatureMoveState::Patrol {
 
-                    let hit_right = physics_world.shape_cast_with_filter(
+                    let hit_right = rapier_context.cast_shape(
+                        transform.translation.truncate() + Vec2::new(raycast, 0.0),
+                        0.0,
+                        Vec2::new(0.0, -1.0),
                         collider,
-                        transform.translation + Vec3::new(raycast, 0.0, 0.0),
-                        transform.rotation,
-                        Vec3::new(0.0, -1.0, 0.0), 
-                        CollisionLayers::none()
-                        .with_group(ColliderTypes::Enemy)
-                        .with_mask(ColliderTypes::World),
-                        |_enityty| true,
+                        1.0,
+                        QueryFilter::default()
+                        .groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_1))
                     );
         
-                    let hit_left = physics_world.shape_cast_with_filter(
+                    let hit_left = rapier_context.cast_shape(
+                        transform.translation.truncate() + Vec2::new(-raycast, 0.0),
+                        0.0,
+                        Vec2::new(0.0, -1.0),
                         collider,
-                        transform.translation + Vec3::new(-raycast, 0.0, 0.0),
-                        transform.rotation,
-                        Vec3::new(0.0, -1.0, 0.0),
-                        CollisionLayers::none()
-                        .with_group(ColliderTypes::Enemy)
-                        .with_mask(ColliderTypes::World),
-                        |_enityty| true,
+                        1.0,
+                        QueryFilter::default()
+                        .groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_1))
                     );
         
         
@@ -165,26 +165,24 @@ pub fn apply_creature_state (
 
                 // COLLISIONS
 
-                let collision_right = physics_world.shape_cast_with_filter(
+                let collision_right = rapier_context.cast_shape(
+                    transform.translation.truncate(),
+                    0.0,
+                    Vec2::new(velocity.x, 0.0),
                     collider,
-                    transform.translation,
-                    transform.rotation,
-                    Vec3::new(velocity.x, 0.0, 0.0), 
-                    CollisionLayers::none()
-                    .with_group(ColliderTypes::Enemy)
-                    .with_mask(ColliderTypes::World),
-                    |_enityty| true,
+                    1.0, 
+                    QueryFilter::default()
+                    .groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_1))
                 );
 
-                let collision_left = physics_world.shape_cast_with_filter(
+                let collision_left = rapier_context.cast_shape(
+                    transform.translation.truncate(),
+                    0.0,
+                    Vec2::new(velocity.x, 0.0),
                     collider,
-                    transform.translation,
-                    transform.rotation,
-                    Vec3::new(velocity.x, 0.0, 0.0), 
-                    CollisionLayers::none()
-                    .with_group(ColliderTypes::Enemy)
-                    .with_mask(ColliderTypes::World),
-                    |_enityty| true,
+                    1.0, 
+                    QueryFilter::default()
+                    .groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_1))
                 );
 
                 if collision_right.is_some() || collision_left.is_some() {

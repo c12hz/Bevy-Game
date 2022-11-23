@@ -1,21 +1,24 @@
 use bevy::prelude::*;
-use heron::rapier_plugin::PhysicsWorld;
-use heron::{CollisionLayers, CollisionShape};
+use bevy_rapier2d::{
+    prelude::{Collider, InteractionGroups, QueryFilter, RapierContext},
+    rapier::prelude::Group,
+};
+
 use crate::player::PlayerGraphics;
 use crate::player::Player;
 use crate::player::PlayerState;
 use crate::player::PlayerMoveState;
 use crate::player::PlayerDirectionState;
 use crate::player::CameraVariables;
-use crate::world::ColliderTypes;
+
 
 use super::PlayerStateVariables;
 
 
 pub fn move_camera (
     mut qcamera: Query<(&mut Transform, &mut CameraVariables), (With <Camera>, Without <Player>, Without <PlayerGraphics>)>,
-    qplayer: Query<(&Transform, &PlayerState, &CollisionShape, &PlayerStateVariables), (With <Player>, Without <PlayerGraphics>, Without <Camera>)>,
-    physics_world: PhysicsWorld,
+    qplayer: Query<(&Transform, &PlayerState, &Collider, &PlayerStateVariables), (With <Player>, Without <PlayerGraphics>, Without <Camera>)>,
+    rapier_context: Res<RapierContext>,
 ){
     let scalar_x = 0.1;
     let scalar_y = 0.05;
@@ -36,27 +39,27 @@ pub fn move_camera (
             let distance = camera_var.new_ground_height - camera_transform.translation.y;
             let velocity = (scalar_y * distance * 4.0).round() / 4.0;
 
+            
+            
 
-            let hit_right = physics_world.shape_cast_with_filter(
+            let hit_right = rapier_context.cast_shape(
+                player_transform.translation.truncate(),
+                0.0,
+                Vec2::new(raycast, 0.0),
                 collider,
-                player_transform.translation,
-                player_transform.rotation,
-                Vec3::new(raycast, 0.0, 0.0),
-                CollisionLayers::none()
-                .with_group(ColliderTypes::Player)
-                .with_mask(ColliderTypes::World),
-                |_enityty| true,
+                1.0,
+                QueryFilter::default()
+                .groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_1))
             );
 
-            let hit_left = physics_world.shape_cast_with_filter(
+            let hit_left = rapier_context.cast_shape(
+                player_transform.translation.truncate(),
+                0.0,
+                Vec2::new(-raycast, 0.0),
                 collider,
-                player_transform.translation,
-                player_transform.rotation,
-                Vec3::new(-raycast, 0.0, 0.0),
-                CollisionLayers::none()
-                .with_group(ColliderTypes::Player)
-                .with_mask(ColliderTypes::World),
-                |_enityty| true,
+                1.0,
+                QueryFilter::default()
+                .groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_1))
             );
 
             let is_wall_jumping = (state.new.0 == PlayerMoveState::Jump || state.new.0 == PlayerMoveState::Fall) && (hit_left.is_some() || hit_right.is_some()) && var.walljump_counter > 0;
