@@ -41,7 +41,7 @@ pub fn movement_and_collisions(
                 0.0,
                 velocity_vector,
                 collider,
-                1.0,
+                1.1,
                 QueryFilter {
                     exclude_rigid_body: Some(entity),
                     ..QueryFilter::default()
@@ -55,10 +55,10 @@ pub fn movement_and_collisions(
                         velocity_vector = Vec2::ZERO;
                         break;
                     }
-                    let direction = velocity_vector.extend(0.0).normalize();
+                    let original_ray = velocity_vector.extend(0.0);
                     let cross = toi.normal1.extend(0.0).cross(Vec3::Z);
                     velocity_vector = (cross * (cross.dot(velocity_vector.extend(0.0)))).truncate();
-                    transform.translation = (transform.translation + direction * toi.toi) - direction_offset;
+                    transform.translation = (transform.translation + original_ray * toi.toi) - direction_offset;
                     collided = true;
                 } else if let TOIStatus::Penetrating = toi.status {
                 }
@@ -70,6 +70,7 @@ pub fn movement_and_collisions(
 
 
         transform.translation += velocity_vector.extend(0.0);
+        
         
         // the code below rounds up the player transform to multiples of 0.125 (game scale unit) whenever it is safe to do so.
             //this ensures there are no ugly long decimal points in the player transform whenever possible
@@ -126,6 +127,7 @@ pub fn movement_and_collisions(
 
         if collided == true {   
         }
+
         
     }
 }
