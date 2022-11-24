@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, render::render_resource::encase::rts_array::Truncate};
 use bevy_rapier2d::{
     prelude::{Collider, InteractionGroups, QueryFilter, RapierContext, TOIStatus},
     rapier::prelude::Group,
@@ -55,10 +55,10 @@ pub fn movement_and_collisions(
                         velocity_vector = Vec2::ZERO;
                         break;
                     }
-                    let cross = Vec3::new(toi.normal2.x, toi.normal2.y, 0.0).cross(Vec3::Z);
-                    velocity_vector = (cross * (cross.dot(Vec3::new(velocity_vector.x, velocity_vector.y, 0.0)))).truncate();
-                    //dbg!(info.self_end_position);
-                    //transform.translation -= toi.witness2.extend(0.0) - direction_vector;
+                    let cross = toi.normal1.extend(0.0).cross(Vec3::Z);
+                    velocity_vector = (cross * (cross.dot(velocity_vector.extend(0.0)))).truncate();
+                    let direction = velocity_vector.extend(0.0).try_normalize()?;
+                    transform.translation = (transform.translation + direction * toi.toi) - direction_vector;
                     collided = true;
                 } else if let TOIStatus::Penetrating = toi.status {
                 }
@@ -68,8 +68,9 @@ pub fn movement_and_collisions(
             }
         }
 
-        transform.translation += velocity_vector.extend(0.0);
 
+        transform.translation += velocity_vector.extend(0.0);
+        dbg!(transform.translation);
         
         // the code below rounds up the player transform to multiples of 0.125 (game scale unit) whenever it is safe to do so.
             //this ensures there are no ugly long decimal points in the player transform whenever possible
