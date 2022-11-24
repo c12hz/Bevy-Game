@@ -15,18 +15,18 @@ pub fn movement_and_collisions(
 
     for (entity, mut transform, collider, velocity, state) in queryyy.iter_mut() {
         let mut velocity_vector = Vec2::new(velocity.x, velocity.y);
-        let mut direction_vector = Vec3::new(0.0, 0.0, 0.0);
+        let mut direction_offset = Vec3::new(0.0, 0.0, 0.0);
         if velocity_vector.x > 0.0 {
-            direction_vector.x = 0.01;
+            direction_offset.x = 0.01;
         }
         if velocity_vector.x < 0.0 {
-            direction_vector.x = -0.01;
+            direction_offset.x = -0.01;
         }
         if velocity_vector.y > 0.0 {
-            direction_vector.y = 0.01;
+            direction_offset.y = 0.01;
         }
         if velocity_vector.y < 0.0 {
-            direction_vector.y = -0.01;
+            direction_offset.y = -0.01;
         }
 
         let mut collided = false;
@@ -55,10 +55,10 @@ pub fn movement_and_collisions(
                         velocity_vector = Vec2::ZERO;
                         break;
                     }
+                    let direction = velocity_vector.extend(0.0).normalize();
                     let cross = toi.normal1.extend(0.0).cross(Vec3::Z);
                     velocity_vector = (cross * (cross.dot(velocity_vector.extend(0.0)))).truncate();
-                    let direction = velocity_vector.extend(0.0).try_normalize()?;
-                    transform.translation = (transform.translation + direction * toi.toi) - direction_vector;
+                    transform.translation = (transform.translation + direction * toi.toi) - direction_offset;
                     collided = true;
                 } else if let TOIStatus::Penetrating = toi.status {
                 }
@@ -70,7 +70,6 @@ pub fn movement_and_collisions(
 
 
         transform.translation += velocity_vector.extend(0.0);
-        dbg!(transform.translation);
         
         // the code below rounds up the player transform to multiples of 0.125 (game scale unit) whenever it is safe to do so.
             //this ensures there are no ugly long decimal points in the player transform whenever possible
