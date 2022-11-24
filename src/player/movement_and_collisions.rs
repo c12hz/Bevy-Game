@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, render::render_resource::encase::rts_array::Truncate};
 use bevy_rapier2d::{
     prelude::{Collider, InteractionGroups, QueryFilter, RapierContext, TOIStatus},
     rapier::prelude::Group,
@@ -15,18 +15,18 @@ pub fn movement_and_collisions(
 
     for (entity, mut transform, collider, velocity, state) in queryyy.iter_mut() {
         let mut velocity_vector = Vec2::new(velocity.x, velocity.y);
-        let mut direction_vector = Vec3::new(0.0, 0.0, 0.0);
+        let mut direction_offset = Vec3::new(0.0, 0.0, 0.0);
         if velocity_vector.x > 0.0 {
-            direction_vector.x = 0.01;
+            direction_offset.x = 0.01;
         }
         if velocity_vector.x < 0.0 {
-            direction_vector.x = -0.01;
+            direction_offset.x = -0.01;
         }
         if velocity_vector.y > 0.0 {
-            direction_vector.y = 0.01;
+            direction_offset.y = 0.01;
         }
         if velocity_vector.y < 0.0 {
-            direction_vector.y = -0.01;
+            direction_offset.y = -0.01;
         }
 
         let mut collided = false;
@@ -41,7 +41,7 @@ pub fn movement_and_collisions(
                 0.0,
                 velocity_vector,
                 collider,
-                1.0,
+                1.1,
                 QueryFilter {
                     exclude_rigid_body: Some(entity),
                     ..QueryFilter::default()
@@ -55,10 +55,10 @@ pub fn movement_and_collisions(
                         velocity_vector = Vec2::ZERO;
                         break;
                     }
-                    let cross = Vec3::new(toi.normal2.x, toi.normal2.y, 0.0).cross(Vec3::Z);
-                    velocity_vector = (cross * (cross.dot(Vec3::new(velocity_vector.x, velocity_vector.y, 0.0)))).truncate();
-                    //dbg!(info.self_end_position);
-                    //transform.translation -= toi.witness2.extend(0.0) - direction_vector;
+                    let original_ray = velocity_vector.extend(0.0);
+                    let cross = toi.normal1.extend(0.0).cross(Vec3::Z);
+                    velocity_vector = (cross * (cross.dot(velocity_vector.extend(0.0)))).truncate();
+                    transform.translation = (transform.translation + original_ray * toi.toi) - direction_offset;
                     collided = true;
                 } else if let TOIStatus::Penetrating = toi.status {
                 }
@@ -68,8 +68,9 @@ pub fn movement_and_collisions(
             }
         }
 
-        transform.translation += velocity_vector.extend(0.0);
 
+        transform.translation += velocity_vector.extend(0.0);
+        
         
         // the code below rounds up the player transform to multiples of 0.125 (game scale unit) whenever it is safe to do so.
             //this ensures there are no ugly long decimal points in the player transform whenever possible
@@ -126,6 +127,7 @@ pub fn movement_and_collisions(
 
         if collided == true {   
         }
+
         
     }
 }
