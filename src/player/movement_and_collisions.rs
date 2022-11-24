@@ -58,7 +58,7 @@ pub fn movement_and_collisions(
                     let cross = Vec3::new(toi.normal2.x, toi.normal2.y, 0.0).cross(Vec3::Z);
                     velocity_vector = (cross * (cross.dot(Vec3::new(velocity_vector.x, velocity_vector.y, 0.0)))).truncate();
                     //dbg!(info.self_end_position);
-                    //transform.translation = toi.witness2.extend(0.0) - direction_vector;
+                    //transform.translation -= toi.witness2.extend(0.0) - direction_vector;
                     collided = true;
                 } else if let TOIStatus::Penetrating = toi.status {
                 }
@@ -73,7 +73,7 @@ pub fn movement_and_collisions(
         
         // the code below rounds up the player transform to multiples of 0.125 (game scale unit) whenever it is safe to do so.
             //this ensures there are no ugly long decimal points in the player transform whenever possible
-
+         
         if collided == false && (state.new.0 == PlayerMoveState::Idle || state.new.0 == PlayerMoveState::Run || state.new.0 == PlayerMoveState::Whirlwind)  {
             let hit1 = rapier_context.cast_shape(
                 transform.translation.truncate(),
@@ -126,6 +126,7 @@ pub fn movement_and_collisions(
 
         if collided == true {   
         }
+        
     }
 }
 
