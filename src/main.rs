@@ -1,16 +1,16 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
-use iyes_loopless::prelude::*;
-use std::time::Duration;
+//use iyes_loopless::prelude::*;
+//use std::time::Duration;
 use bevy_ecs_ldtk::prelude::*;
 use bevy::window::PresentMode;
 use bevy::render::texture::ImageSettings;
-use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 
-
+/* 
 mod world;
 mod player;
 mod creature;
+
 
 use crate::world::setup_world::*;
 use crate::world::spawn_wall_collision::*;
@@ -43,13 +43,34 @@ use crate::creature::periodic_spawn::*;
 use crate::creature::transfer_data_creature::*;
 use crate::creature::creature_death::*;
 
+*/
 
-
-
-
-
+use game::core;
 
 fn main() {
+    App::new()
+        .insert_resource(Msaa { samples: 1 })
+        .insert_resource(
+            WindowDescriptor {
+                present_mode: PresentMode::Mailbox,
+                title: core::GAME_NAME.to_string(),
+                resizable: true,
+                width: 1920.0,
+                height: 1080.0,
+                ..Default::default()
+            }
+        )
+        .insert_resource(ImageSettings::default_nearest())
+        .add_plugins(DefaultPlugins)
+        .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
+        .add_plugin(RapierDebugRenderPlugin::default())
+        .add_plugin(core::setup::SetupPlugin)
+        .add_plugin(LdtkPlugin)
+        .insert_resource(LevelSelection::Index(0))
+        .run();
+}
+
+/*
     let mut fixed_first = SystemStage::parallel();
     fixed_first
     .add_system(set_player_state.label("set_state"))
@@ -105,5 +126,4 @@ fn main() {
         .add_system(spawn_wall_collision)
         .add_system(get_player_input)
         .register_ldtk_int_cell::<WallBundle>(1)
-        .run();
-}
+ */

@@ -192,17 +192,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bevyGame2"
-version = "0.1.0"
-dependencies = [
- "bevy",
- "bevy_ecs_ldtk",
- "bevy_rapier2d",
- "iyes_loopless",
- "rand",
-]
-
-[[package]]
 name = "bevy_animation"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1562,6 +1551,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c31b6d751ae2c7f11320402d34e41349dd1016f8d5d45e48c4312bc8625af50c"
 dependencies = [
  "byteorder",
+]
+
+[[package]]
+name = "game"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "bevy_ecs_ldtk",
+ "bevy_rapier2d",
+ "iyes_loopless",
+ "rand",
 ]
 
 [[package]]
