@@ -1,6 +1,7 @@
 pub mod setup;
 pub mod states;
 pub mod fps_plugin;
+pub mod resources;
 
 pub mod prelude {
     pub use crate::core::states;
