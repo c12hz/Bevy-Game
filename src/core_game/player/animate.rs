@@ -1,10 +1,8 @@
 use bevy::prelude::*;
 
-
 use crate::core_game::player::player_structs::AnimationParams;
 use crate::core_game::player::player_structs::TimeDivisions;
 use crate::core_game::player::player_structs::PlayerGraphics;
-
 
 pub fn animate(
     mut q: Query<(
