@@ -1,8 +1,6 @@
 use bevy::prelude::*;
 
-use crate::player::Player;
-use crate::player::PlayerGraphics;
-use crate::player::PlayerInput;
+use crate::core_game::player::player_structs::PlayerInput;
 
 
 pub fn get_player_input (

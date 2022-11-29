@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::{Collider, CollisionGroups, Group, RigidBody};
 use bevy_ecs_ldtk::prelude::*;
 use std::collections::{HashMap, HashSet};
-use crate::world::Wall;
+use crate::core_game::world::world_structs::Wall;
 
 /// Spawns heron collisions for the walls of a level
 ///

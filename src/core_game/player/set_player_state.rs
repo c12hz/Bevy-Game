@@ -4,18 +4,14 @@ use bevy_rapier2d::{
     rapier::prelude::Group,
 };
 
-
-use crate::player::PlayerState;
-use crate::player::PlayerMoveState;
-use crate::player::PlayerDirectionState;
-use crate::player::PlayerStateVariables;
-use crate::player::Player;
-use crate::player::StealthMode;
-use crate::player::PlayerDamage;
-use crate::player::PlayerInput;
-
-
-
+use crate::core_game::player::player_structs::PlayerState;
+use crate::core_game::player::player_structs::PlayerMoveState;
+use crate::core_game::player::player_structs::PlayerDirectionState;
+use crate::core_game::player::player_structs::PlayerStateVariables;
+use crate::core_game::player::player_structs::Player;
+use crate::core_game::player::player_structs::StealthMode;
+use crate::core_game::player::player_structs::PlayerDamage;
+use crate::core_game::player::player_structs::PlayerInput;
 
 // this function generates player states
 // the idea here is that player states are only dependant on: 
@@ -33,9 +29,6 @@ pub fn set_player_state (
     rapier_context: Res<RapierContext>,
 ) {
     
-
-
-
     for (collider, transform, damage, mut state, mut var, mut stealth, input) in query.iter_mut() {
 
         let move_left = input.pressing_left;

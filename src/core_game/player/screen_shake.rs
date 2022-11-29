@@ -1,8 +1,8 @@
 use bevy::prelude::*;
-use crate::player::PlayerGraphics;
-use crate::player::Player;
-use crate::player::PlayerDamage;
-use rand::{thread_rng, seq::SliceRandom, Rng};
+use crate::core_game::player::player_structs::PlayerGraphics;
+use crate::core_game::player::player_structs::Player;
+use crate::core_game::player::player_structs::PlayerDamage;
+use rand::{thread_rng, seq::SliceRandom};
 
 
 

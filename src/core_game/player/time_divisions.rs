@@ -1,7 +1,7 @@
 use bevy::prelude::*;
-use crate::player::TimeDivisions;
-use crate::player::AnimationParams;
-use crate::player::PlayerGraphics;
+use crate::core_game::player::player_structs::TimeDivisions;
+use crate::core_game::player::player_structs::AnimationParams;
+use crate::core_game::player::player_structs::PlayerGraphics;
 
 
     // this is perhaps a quite unusual way to go about things, 

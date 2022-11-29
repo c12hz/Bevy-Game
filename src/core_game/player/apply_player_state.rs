@@ -1,19 +1,19 @@
 use bevy::prelude::*;
 //use bevy::render::render_resource::PipelineLayout;
 
-use crate::player::MoveSpeed;
-use crate::player::Vel;
-use crate::player::PlayerState;
-use crate::player::PlayerMoveState;
-use crate::player::PlayerDirectionState;
-use crate::player::Grav;
-use crate::player::Player;
-use crate::player::PlayerGraphics;
-use crate::player::WallKick;
-use crate::player::StealthMode;
-use crate::player::PlayerInput;
+use crate::core_game::player::player_structs::MoveSpeed;
+use crate::core_game::player::player_structs::Vel;
+use crate::core_game::player::player_structs::PlayerState;
+use crate::core_game::player::player_structs::PlayerMoveState;
+use crate::core_game::player::player_structs::PlayerDirectionState;
+use crate::core_game::player::player_structs::Grav;
+use crate::core_game::player::player_structs::Player;
+use crate::core_game::player::player_structs::PlayerGraphics;
+use crate::core_game::player::player_structs::WallKick;
+use crate::core_game::player::player_structs::StealthMode;
+use crate::core_game::player::player_structs::PlayerInput;
 
-use super::PlayerStateVariables;
+use crate::core_game::player::player_structs::PlayerStateVariables;
 
 
 

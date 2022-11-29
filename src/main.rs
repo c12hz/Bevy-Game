@@ -2,9 +2,11 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 //use iyes_loopless::prelude::*;
 //use std::time::Duration;
-use bevy_ecs_ldtk::prelude::*;
 use bevy::window::PresentMode;
 use bevy::render::texture::ImageSettings;
+
+mod core;
+mod core_game;
 
 /* 
 mod world;
@@ -45,8 +47,6 @@ use crate::creature::creature_death::*;
 
 */
 
-use game::core;
-
 fn main() {
     App::new()
         .insert_resource(Msaa { samples: 1 })
@@ -65,8 +65,8 @@ fn main() {
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugin(RapierDebugRenderPlugin::default())
         .add_plugin(core::setup::SetupPlugin)
-        .add_plugin(LdtkPlugin)
-        .insert_resource(LevelSelection::Index(0))
+        .add_plugin(core_game::world::WorldPlugin)
+        .add_plugin(core_game::player::PlayerPlugin)
         .run();
 }
 

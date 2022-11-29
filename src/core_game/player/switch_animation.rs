@@ -1,15 +1,15 @@
 use bevy::{prelude::*};
 
 
-use crate::player::MyPlayerAnimations;
-use crate::player::PlayerState;
-use crate::player::PlayerAnimationState;
-use crate::player::PlayerDirectionState;
-use crate::player::Vel;
-use crate::player::TimeDivisions;
+use crate::core_game::player::player_structs::MyPlayerAnimations;
+use crate::core_game::player::player_structs::PlayerState;
+use crate::core_game::player::player_structs::PlayerAnimationState;
+use crate::core_game::player::player_structs::PlayerDirectionState;
+use crate::core_game::player::player_structs::Vel;
+use crate::core_game::player::player_structs::TimeDivisions;
 
-use crate::player::Player;
-use crate::player::PlayerGraphics;
+use crate::core_game::player::player_structs::Player;
+use crate::core_game::player::player_structs::PlayerGraphics;
 
 pub fn switch_animation(
     anims: Option<Res<MyPlayerAnimations>>,
@@ -28,7 +28,7 @@ pub fn switch_animation(
             if state.new.2 != PlayerAnimationState::Fall {
                 *float_counter = 0;
             }
-            for (e, time) in player_query.iter() {
+            for (e, _time) in player_query.iter() {
 
 
                 if state.new.2 == PlayerAnimationState::Run {

@@ -4,15 +4,14 @@ use bevy_rapier2d::{
     rapier::prelude::Group,
 };
 
-use crate::player::PlayerGraphics;
-use crate::player::Player;
-use crate::player::PlayerState;
-use crate::player::PlayerMoveState;
-use crate::player::PlayerDirectionState;
-use crate::player::CameraVariables;
+use crate::core_game::player::player_structs::PlayerGraphics;
+use crate::core_game::player::player_structs::Player;
+use crate::core_game::player::player_structs::PlayerState;
+use crate::core_game::player::player_structs::PlayerMoveState;
+use crate::core_game::player::player_structs::CameraVariables;
 
 
-use super::PlayerStateVariables;
+use crate::core_game::player::player_structs::PlayerStateVariables;
 
 
 pub fn move_camera (

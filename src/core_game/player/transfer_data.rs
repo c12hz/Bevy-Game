@@ -1,9 +1,7 @@
 use bevy::prelude::*;
 
-use crate::player::Player;
-use crate::player::PlayerGraphics;
-
-
+use crate::core_game::player::player_structs::Player;
+use crate::core_game::player::player_structs::PlayerGraphics;
 
 pub fn transfer_data(
     qplayer: Query<&Transform, (With<Player>, Without<PlayerGraphics>)>,

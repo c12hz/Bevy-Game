@@ -8,4 +8,4 @@ pub mod prelude {
 }
 
 pub const GAME_NAME: &str = "GAME";
-pub const VERSION: f32 = 0.1;
+pub const _VERSION: f32 = 0.1;

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::player::TimeDivisions;
+use crate::core_game::player::player_structs::TimeDivisions;
 
 
 // careful with volume when you use this function!
@@ -14,7 +14,7 @@ use crate::player::TimeDivisions;
 // this could also be an issue with my specific PC setup
 
 
-pub fn audio_test (
+pub fn _audio_test (
     query: Query<&TimeDivisions>,
     asset_server: Res<AssetServer>,
     audio: Res<Audio>

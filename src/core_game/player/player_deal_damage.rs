@@ -4,18 +4,13 @@ use bevy_rapier2d::{
     rapier::prelude::Group,
 };
 
-
-
-use crate::player::PlayerState;
-use crate::player::PlayerAnimationState;
-use crate::player::Player;
-use crate::player::PlayerGraphics;
-use crate::player::PlayerDamage;
-use crate::player::PlayerDamageStats;
-use crate::player::DamageKind;
-
-
-
+use crate::core_game::player::player_structs::PlayerState;
+use crate::core_game::player::player_structs::PlayerAnimationState;
+use crate::core_game::player::player_structs::Player;
+use crate::core_game::player::player_structs::PlayerGraphics;
+use crate::core_game::player::player_structs::PlayerDamage;
+use crate::core_game::player::player_structs::PlayerDamageStats;
+use crate::core_game::player::player_structs::DamageKind;
 
 pub fn player_deal_damage (
     mut physical: Query<(&Collider, &PlayerState, &mut PlayerDamage, &PlayerDamageStats), With<Player>>,
@@ -59,7 +54,7 @@ pub fn player_deal_damage (
                                 }),
                             );
 
-                            if let Some((entity,toii)) = hit_whirl_right {
+                            if let Some((entity,_toii)) = hit_whirl_right {
                                 targets_right.push(entity);
                             } else {
                                 break;
@@ -89,7 +84,7 @@ pub fn player_deal_damage (
                                 }),
                             );
 
-                            if let Some((entity, toii)) = hit_whirl_left {
+                            if let Some((entity, _toii)) = hit_whirl_left {
                                 targets_left.push(entity);
                             } else {
                                 break;

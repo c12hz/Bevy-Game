@@ -1,17 +1,15 @@
 use bevy::prelude::*;
 
-use crate::player::Camera;
-use crate::player::CameraVariables;
+use crate::core_game::player::player_structs::Camera;
+use crate::core_game::player::player_structs::CameraVariables;
 use bevy_ecs_ldtk::prelude::*;
-
-
 
 pub fn setup_camera(
     mut commands: Commands,
     query: Query<(Entity, &EntityInstance), Added<EntityInstance>>,
 ) {
 
-    for (e, ldtk_entity_info) in query.iter() {
+    for (_e, ldtk_entity_info) in query.iter() {
         if ldtk_entity_info.identifier != "Player" {
             continue;
         }

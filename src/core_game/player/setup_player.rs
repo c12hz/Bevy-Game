@@ -3,27 +3,26 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::{Collider, CollisionGroups, Group, RigidBody};
 use bevy_ecs_ldtk::prelude::*;
 
-use crate::player::Grav;
-use crate::player::MoveSpeed;
-use crate::player::Vel;
-use crate::player::PlayerInput;
-use crate::player::PlayerMoveState;
-use crate::player::PlayerDirectionState;
-use crate::player::PlayerAnimationState;
-use crate::player::PlayerStateVariables;
-use crate::player::PlayerState;
-use crate::player::Player;
-use crate::player::WallKick;
-use crate::player::PlayerDamage;
-use crate::player::DamageKind;
-use crate::player::DamageWeapon;
-use crate::player::PlayerDamageStats;
-use crate::player::StealthMode;
-
-use crate::player::AnimationParams;
-use crate::player::MyPlayerAnimations;
-use crate::player::TimeDivisions;
-use crate::player::PlayerGraphics;
+use crate::core_game::player::player_structs::Grav;
+use crate::core_game::player::player_structs::MoveSpeed;
+use crate::core_game::player::player_structs::Vel;
+use crate::core_game::player::player_structs::PlayerInput;
+use crate::core_game::player::player_structs::PlayerMoveState;
+use crate::core_game::player::player_structs::PlayerDirectionState;
+use crate::core_game::player::player_structs::PlayerAnimationState;
+use crate::core_game::player::player_structs::PlayerStateVariables;
+use crate::core_game::player::player_structs::PlayerState;
+use crate::core_game::player::player_structs::Player;
+use crate::core_game::player::player_structs::WallKick;
+use crate::core_game::player::player_structs::PlayerDamage;
+use crate::core_game::player::player_structs::DamageKind;
+use crate::core_game::player::player_structs::DamageWeapon;
+use crate::core_game::player::player_structs::PlayerDamageStats;
+use crate::core_game::player::player_structs::StealthMode;
+use crate::core_game::player::player_structs::AnimationParams;
+use crate::core_game::player::player_structs::MyPlayerAnimations;
+use crate::core_game::player::player_structs::TimeDivisions;
+use crate::core_game::player::player_structs::PlayerGraphics;
 
 
 
@@ -34,7 +33,7 @@ pub fn setup_player(
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
     query: Query<(Entity, &EntityInstance), Added<EntityInstance>>,
 ) {
-    for (e, ldtk_entity_info) in query.iter() {
+    for (_e, ldtk_entity_info) in query.iter() {
         if ldtk_entity_info.identifier != "Player" {
             continue;
         }

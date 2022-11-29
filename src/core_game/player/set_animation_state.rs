@@ -5,14 +5,14 @@ use bevy_rapier2d::{
 };
 
 
-use crate::player::PlayerState;
-use crate::player::PlayerMoveState;
-use crate::player::PlayerAnimationState;
-use crate::player::PlayerDirectionState;
-use crate::player::PlayerStateVariables;
-use crate::player::Player;
+use crate::core_game::player::player_structs::PlayerState;
+use crate::core_game::player::player_structs::PlayerMoveState;
+use crate::core_game::player::player_structs::PlayerAnimationState;
+use crate::core_game::player::player_structs::PlayerDirectionState;
+use crate::core_game::player::player_structs::PlayerStateVariables;
+use crate::core_game::player::player_structs::Player;
 
-use super::WallKick;
+use crate::core_game::player::player_structs::WallKick;
 
 
 
@@ -39,7 +39,7 @@ pub fn set_animation_state (
 
 
 
-    for (mut state, mut var, collider, transform, wall) in query.iter_mut() {
+    for (mut state, mut var, collider, transform, _wall) in query.iter_mut() {
 
 
         if keys.just_pressed(KeyCode::G) {
