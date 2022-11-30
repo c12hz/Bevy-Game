@@ -1,6 +1,10 @@
 use bevy::prelude::*;
+<<<<<<< Updated upstream
 
 
+=======
+use bevy_inspector_egui::Inspectable;
+>>>>>>> Stashed changes
 
 #[derive(Component)]
 pub struct Player;
@@ -60,10 +64,19 @@ pub struct PlayerInput {
     pub just_pressed_skill3: bool,
     pub pressing_skill4: bool,
     pub just_pressed_skill4: bool,
+<<<<<<< Updated upstream
 }
 
 
 #[derive(Component, Debug, Clone, Copy, PartialEq)]
+=======
+    pub pressing_up: bool,
+    pub just_pressed_up: bool,
+}
+
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+>>>>>>> Stashed changes
 pub enum PlayerMoveState {
     Idle,
     Run,
@@ -71,13 +84,22 @@ pub enum PlayerMoveState {
     Fall,
     WallSlide,
     Whirlwind,
+<<<<<<< Updated upstream
     Dash,
     DashStrike,
+=======
+    DashForward,
+    DashDown45,
+>>>>>>> Stashed changes
 }
 
 
 
+<<<<<<< Updated upstream
 #[derive(Component, Debug, Clone, Copy, PartialEq)]
+=======
+#[derive(Debug, Clone, Copy, PartialEq)]
+>>>>>>> Stashed changes
 pub enum PlayerDirectionState {
     Left,
     Right,
@@ -94,27 +116,61 @@ pub struct StealthMode {
 }
 
 
+<<<<<<< Updated upstream
 #[derive(Component, Debug, Clone, Copy, PartialEq)]
+=======
+#[derive(Debug, Clone, Copy, PartialEq)]
+>>>>>>> Stashed changes
 pub enum PlayerAnimationState {
     Idle,
     Run,
     Jump,
     Fall,
     WallSlide,
+<<<<<<< Updated upstream
     Whirlwind,
+=======
+    WhirlwindHammer,
+    WhirlwindSword,
+>>>>>>> Stashed changes
     RunIdle,
     IdleWhirlwind,
     WhirlwindIdle,
     FallIdle,
+<<<<<<< Updated upstream
     SwordHitBasic,
     HammerHitBasic,
 
 
+=======
+    MeleeBasicHammer,
+    MeleeBasicSword,
+    RangedBasicBowForward,
+    RangedBasicBowUp,
+    RangedBasicGunsForward,
+    RangedBasicGunsUp,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum PlayerAttackState {
+    MeleeBasicHammer,
+    MeleeBasicSword,
+    RangedBasicBowForward,
+    RangedBasicBowUp,
+    RangedBasicGunsForward,
+    RangedBasicGunsUp,
+    WhirlwindHammer,
+    WhirlwindSword,
+    DashForward,
+    DashDown45,
+    None,
+>>>>>>> Stashed changes
 }
 
 
 #[derive(Component, Debug)]
 pub struct PlayerState {
+<<<<<<< Updated upstream
     pub old: (PlayerMoveState, PlayerDirectionState, PlayerAnimationState),
     pub new: (PlayerMoveState, PlayerDirectionState, PlayerAnimationState),
 }
@@ -127,6 +183,10 @@ impl PlayerState {
     fn _changed(&self) -> bool {
         self.old.0 != self.new.0
     }
+=======
+    pub old: (PlayerMoveState, PlayerDirectionState, PlayerAnimationState, PlayerAttackState),
+    pub new: (PlayerMoveState, PlayerDirectionState, PlayerAnimationState, PlayerAttackState),
+>>>>>>> Stashed changes
 }
 
 
@@ -167,6 +227,7 @@ pub enum DamageKind {
     DashStrike,
 }
 
+<<<<<<< Updated upstream
 #[derive(Component, Debug, Clone, Copy, PartialEq)]
 pub enum DamageWeapon {
     Hammer,
@@ -175,6 +236,32 @@ pub enum DamageWeapon {
     Guns,
 }
 
+=======
+
+
+#[derive(Debug, Clone, Copy, PartialEq, Reflect, Inspectable)]
+pub enum PlayerWeaponMelee {
+    Hammer,
+    Sword,
+    None,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Reflect, Inspectable)]
+pub enum PlayerWeaponRanged {
+    Bow,
+    Guns,
+    None,
+}
+
+#[derive(Component, Debug, Clone, Copy, PartialEq, Reflect, Inspectable)]
+pub struct PlayerWeapons {
+    pub melee: PlayerWeaponMelee,
+    pub ranged: PlayerWeaponRanged,
+}
+
+
+
+>>>>>>> Stashed changes
 #[derive(Component, Debug, Clone)]
 pub struct PlayerDamage {
     pub dealt: bool,
@@ -182,7 +269,10 @@ pub struct PlayerDamage {
     pub targets: Vec<Entity>,
     pub location: Vec3,
     pub kind: DamageKind,
+<<<<<<< Updated upstream
     pub weapon: DamageWeapon,
+=======
+>>>>>>> Stashed changes
     pub kind_mult: f32,
     pub weapon_dmg: f32,
     pub crit: bool,
@@ -229,10 +319,23 @@ pub struct MyPlayerAnimations {
     pub idlewhirl: AnimationParams,
     pub whirlidle: AnimationParams,
     pub fallidle: AnimationParams,
+<<<<<<< Updated upstream
     pub swdatkbsc1: AnimationParams,
     pub swdatkbsc2: AnimationParams,
     pub hmratkbsc1: AnimationParams,
     pub hmratkbsc2: AnimationParams,
+=======
+    pub mbs1: AnimationParams,
+    pub mbs2: AnimationParams,
+    pub mbh1: AnimationParams,
+    pub mbh2: AnimationParams,
+    pub rbbf: AnimationParams,
+    pub rbbu: AnimationParams,
+    pub rbgf1: AnimationParams,
+    pub rbgf2: AnimationParams,
+    pub rbgu1: AnimationParams,
+    pub rbgu2: AnimationParams,
+>>>>>>> Stashed changes
 }
 
 #[derive(Component, Clone)]
@@ -253,3 +356,25 @@ pub struct TimeDivisions {
     pub fifteen: u32,
     pub reset: bool,
 }
+<<<<<<< Updated upstream
+=======
+
+
+#[derive(Clone, Copy, Debug, Reflect, Inspectable, PartialEq)]
+pub enum Ability {
+    MeleeBasic,
+    RangedBasic,
+    Whirlwind,
+    DashForward,
+    DashDown45,
+    Stealth,
+    None,
+}
+
+#[derive(Component, Debug, Reflect, Inspectable)]
+pub struct PlayerAbilities {
+    pub ability1: Ability,
+    pub ability2: Ability,
+    pub ability3: Ability,
+}
+>>>>>>> Stashed changes

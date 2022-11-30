@@ -1,13 +1,13 @@
 use bevy::prelude::*;
 
-use crate::creature::Creature;
-use crate::creature::CreatureGraphics;
+use crate::core_game::creature::creature_structs::Creature;
+use crate::core_game::creature::creature_structs::CreatureGraphics;
 
-use crate::player::Player;
-use crate::player::PlayerDamage;
+use crate::core_game::player::player_structs::Player;
+use crate::core_game::player::player_structs::PlayerDamage;
 
-use crate::creature::CreatureGraphicsEntity;
-use crate::creature::CreatureStats;
+use crate::core_game::creature::creature_structs::CreatureGraphicsEntity;
+use crate::core_game::creature::creature_structs::CreatureStats;
 
 pub fn creature_get_damage (
     player: Query<(&PlayerDamage), With<Player>>,

@@ -9,6 +9,10 @@ use crate::core_game::player::player_structs::Vel;
 use crate::core_game::player::player_structs::PlayerInput;
 use crate::core_game::player::player_structs::PlayerMoveState;
 use crate::core_game::player::player_structs::PlayerDirectionState;
+<<<<<<< Updated upstream:src/core_game/player/setup_player.rs
+=======
+use crate::core_game::player::player_structs::PlayerAttackState;
+>>>>>>> Stashed changes:src/player/setup_player.rs
 use crate::core_game::player::player_structs::PlayerAnimationState;
 use crate::core_game::player::player_structs::PlayerStateVariables;
 use crate::core_game::player::player_structs::PlayerState;
@@ -16,7 +20,15 @@ use crate::core_game::player::player_structs::Player;
 use crate::core_game::player::player_structs::WallKick;
 use crate::core_game::player::player_structs::PlayerDamage;
 use crate::core_game::player::player_structs::DamageKind;
+<<<<<<< Updated upstream:src/core_game/player/setup_player.rs
 use crate::core_game::player::player_structs::DamageWeapon;
+=======
+use crate::core_game::player::player_structs::PlayerWeapons;
+use crate::core_game::player::player_structs::PlayerWeaponMelee;
+use crate::core_game::player::player_structs::PlayerWeaponRanged;
+use crate::core_game::player::player_structs::Ability;
+use crate::core_game::player::player_structs::PlayerAbilities;
+>>>>>>> Stashed changes:src/player/setup_player.rs
 use crate::core_game::player::player_structs::PlayerDamageStats;
 use crate::core_game::player::player_structs::StealthMode;
 use crate::core_game::player::player_structs::AnimationParams;
@@ -88,6 +100,8 @@ pub fn setup_player(
                 just_pressed_skill3: false,
                 pressing_skill4: false,
                 just_pressed_skill4: false,
+                pressing_up: false,
+                just_pressed_up: false,
             })
             .insert(Player)
             .insert(PlayerStateVariables {
@@ -107,8 +121,8 @@ pub fn setup_player(
                 sprite_flipped: false,
             })
             .insert(PlayerState {
-                old: (PlayerMoveState::Idle, PlayerDirectionState::Right, PlayerAnimationState::Idle),
-                new: (PlayerMoveState::Idle, PlayerDirectionState::Right, PlayerAnimationState::Idle),
+                old: (PlayerMoveState::Idle, PlayerDirectionState::Right, PlayerAnimationState::Idle, PlayerAttackState::None),
+                new: (PlayerMoveState::Idle, PlayerDirectionState::Right, PlayerAnimationState::Idle, PlayerAttackState::None),
             })
             .insert(PlayerDamage {
                 dealt: false,
@@ -116,7 +130,6 @@ pub fn setup_player(
                 targets: Vec::new(),
                 location: Vec3::new(0.0, 0.0, 0.0),
                 kind: DamageKind::Simple,
-                weapon: DamageWeapon::Hammer,
                 kind_mult: 1.0,
                 weapon_dmg: 24.0,
                 crit: false,
@@ -140,8 +153,17 @@ pub fn setup_player(
                 active: false,
                 duration: 300,
                 counter: 0,
-                speed_x: 2.25
+                speed_x: 2.25,
 
+            })
+            .insert(PlayerWeapons {
+                melee: PlayerWeaponMelee::None,
+                ranged: PlayerWeaponRanged::None,
+            })
+            .insert(PlayerAbilities {
+                ability1: Ability::None,
+                ability2: Ability::None,
+                ability3: Ability::None,
             })
             .insert(RigidBody::KinematicPositionBased)
             .insert(Collider::cuboid(2.0, 5.0))
@@ -163,7 +185,7 @@ pub fn setup_player(
         let texture_atlas_idle = TextureAtlas::from_grid(texture_handle_idle, Vec2::new(16.0, 16.0), 1 , 1);
         let texture_atlas_handle_idle = texture_atlases.add(texture_atlas_idle);
 
-        let texture_handle_jump = asset_server.load("animations/jumpUp2.png");
+        let texture_handle_jump = asset_server.load("animations/jumpUp.png");
         let texture_atlas_jump = TextureAtlas::from_grid(texture_handle_jump, Vec2::new(16.0, 16.0), 3 , 1);
         let texture_atlas_handle_jump = texture_atlases.add(texture_atlas_jump);
 
@@ -203,21 +225,46 @@ pub fn setup_player(
         let texture_atlas_fallidle = TextureAtlas::from_grid(texture_handle_fallidle, Vec2::new(16.0, 16.0), 2 , 1);
         let texture_atlas_handle_fallidle = texture_atlases.add(texture_atlas_fallidle);
 
-        let texture_handle_swdatkbsc1 = asset_server.load("animations/swordAttack1.png");
-        let texture_atlas_swdatkbsc1 = TextureAtlas::from_grid(texture_handle_swdatkbsc1, Vec2::new(64.0, 24.0), 4 , 1);
-        let texture_atlas_handle_swdatkbsc1 = texture_atlases.add(texture_atlas_swdatkbsc1);
+        let texture_handle_mbs1 = asset_server.load("animations/swordAttack1.png");
+        let texture_atlas_mbs1 = TextureAtlas::from_grid(texture_handle_mbs1, Vec2::new(64.0, 24.0), 4 , 1);
+        let texture_atlas_handle_mbs1 = texture_atlases.add(texture_atlas_mbs1);
 
-        let texture_handle_swdatkbsc2 = asset_server.load("animations/swordAttack2.png");
-        let texture_atlas_swdatkbsc2 = TextureAtlas::from_grid(texture_handle_swdatkbsc2, Vec2::new(64.0, 24.0), 4 , 1);
-        let texture_atlas_handle_swdatkbsc2 = texture_atlases.add(texture_atlas_swdatkbsc2);
+        let texture_handle_mbs2 = asset_server.load("animations/swordAttack2.png");
+        let texture_atlas_mbs2 = TextureAtlas::from_grid(texture_handle_mbs2, Vec2::new(64.0, 24.0), 4 , 1);
+        let texture_atlas_handle_mbs2 = texture_atlases.add(texture_atlas_mbs2);
 
-        let texture_handle_hmratkbsc1 = asset_server.load("animations/hammerAttack1.png");
-        let texture_atlas_hmratkbsc1 = TextureAtlas::from_grid(texture_handle_hmratkbsc1, Vec2::new(64.0, 24.0), 6 , 1);
-        let texture_atlas_handle_hmratkbsc1 = texture_atlases.add(texture_atlas_hmratkbsc1);
+        let texture_handle_mbh1 = asset_server.load("animations/hammerAttack1.png");
+        let texture_atlas_mbh1 = TextureAtlas::from_grid(texture_handle_mbh1, Vec2::new(64.0, 24.0), 6 , 1);
+        let texture_atlas_handle_mbh1 = texture_atlases.add(texture_atlas_mbh1);
 
-        let texture_handle_hmratkbsc2 = asset_server.load("animations/hammerAttack2.png");
-        let texture_atlas_hmratkbsc2 = TextureAtlas::from_grid(texture_handle_hmratkbsc2, Vec2::new(64.0, 24.0), 6 , 1);
-        let texture_atlas_handle_hmratkbsc2 = texture_atlases.add(texture_atlas_hmratkbsc2);
+        let texture_handle_mbh2 = asset_server.load("animations/hammerAttack2.png");
+        let texture_atlas_mbh2 = TextureAtlas::from_grid(texture_handle_mbh2, Vec2::new(64.0, 24.0), 6 , 1);
+        let texture_atlas_handle_mbh2 = texture_atlases.add(texture_atlas_mbh2);
+
+        let texture_handle_rbbf = asset_server.load("animations/rbbf.png");
+        let texture_atlas_rbbf = TextureAtlas::from_grid(texture_handle_rbbf, Vec2::new(32.0, 32.0), 4 , 1);
+        let texture_atlas_handle_rbbf = texture_atlases.add(texture_atlas_rbbf);
+        
+        let texture_handle_rbbu = asset_server.load("animations/rbbu.png");
+        let texture_atlas_rbbu = TextureAtlas::from_grid(texture_handle_rbbu, Vec2::new(32.0, 32.0), 4 , 1);
+        let texture_atlas_handle_rbbu = texture_atlases.add(texture_atlas_rbbu);
+
+        let texture_handle_rbgf1 = asset_server.load("animations/rbgf1.png");
+        let texture_atlas_rbgf1 = TextureAtlas::from_grid(texture_handle_rbgf1, Vec2::new(48.0, 32.0), 3 , 1);
+        let texture_atlas_handle_rbgf1 = texture_atlases.add(texture_atlas_rbgf1);
+
+        let texture_handle_rbgf2 = asset_server.load("animations/rbgf2.png");
+        let texture_atlas_rbgf2 = TextureAtlas::from_grid(texture_handle_rbgf2, Vec2::new(48.0, 32.0), 3 , 1);
+        let texture_atlas_handle_rbgf2 = texture_atlases.add(texture_atlas_rbgf2);
+
+        let texture_handle_rbgu1 = asset_server.load("animations/rbgu1.png");
+        let texture_atlas_rbgu1 = TextureAtlas::from_grid(texture_handle_rbgu1, Vec2::new(48.0, 32.0), 3 , 1);
+        let texture_atlas_handle_rbgu1 = texture_atlases.add(texture_atlas_rbgu1);
+
+        let texture_handle_rbgu2 = asset_server.load("animations/rbgu2.png");
+        let texture_atlas_rbgu2 = TextureAtlas::from_grid(texture_handle_rbgu2, Vec2::new(48.0, 32.0), 3 , 1);
+        let texture_atlas_handle_rbgu2 = texture_atlases.add(texture_atlas_rbgu2);
+
 
         commands.insert_resource(MyPlayerAnimations {
             run: AnimationParams {
@@ -304,32 +351,74 @@ pub fn setup_player(
                 end: 2,
                 perfect_transitions: false,
             },
-            swdatkbsc1: AnimationParams {
-                atlas: texture_atlas_handle_swdatkbsc1.clone(),
+            mbs1: AnimationParams {
+                atlas: texture_atlas_handle_mbs1.clone(),
                 start: 1,
                 restart: 1,
                 end: 4,
                 perfect_transitions: false,
             },
-            swdatkbsc2: AnimationParams {
-                atlas: texture_atlas_handle_swdatkbsc2.clone(),
+            mbs2: AnimationParams {
+                atlas: texture_atlas_handle_mbs2.clone(),
                 start: 1,
                 restart: 1,
                 end: 4,
                 perfect_transitions: false,
             },
-            hmratkbsc1: AnimationParams {
-                atlas: texture_atlas_handle_hmratkbsc1.clone(),
+            mbh1: AnimationParams {
+                atlas: texture_atlas_handle_mbh1.clone(),
                 start: 0,
                 restart: 0,
                 end: 5,
                 perfect_transitions: false,
             },
-            hmratkbsc2: AnimationParams {
-                atlas: texture_atlas_handle_hmratkbsc2.clone(),
+            mbh2: AnimationParams {
+                atlas: texture_atlas_handle_mbh2.clone(),
                 start: 0,
                 restart: 0,
                 end: 5,
+                perfect_transitions: false,
+            },
+            rbbf: AnimationParams {
+                atlas: texture_atlas_handle_rbbf.clone(),
+                start: 0,
+                restart: 0,
+                end: 4,
+                perfect_transitions: false,
+            },
+            rbbu: AnimationParams {
+                atlas: texture_atlas_handle_rbbu.clone(),
+                start: 0,
+                restart: 0,
+                end: 4,
+                perfect_transitions: false,
+            },
+            rbgf1: AnimationParams {
+                atlas: texture_atlas_handle_rbgf1.clone(),
+                start: 0,
+                restart: 0,
+                end: 3,
+                perfect_transitions: false,
+            },
+            rbgf2: AnimationParams {
+                atlas: texture_atlas_handle_rbgf2.clone(),
+                start: 0,
+                restart: 0,
+                end: 3,
+                perfect_transitions: false,
+            },
+            rbgu1: AnimationParams {
+                atlas: texture_atlas_handle_rbgu1.clone(),
+                start: 0,
+                restart: 0,
+                end: 3,
+                perfect_transitions: false,
+            },
+            rbgu2: AnimationParams {
+                atlas: texture_atlas_handle_rbgu2.clone(),
+                start: 0,
+                restart: 0,
+                end: 3,
                 perfect_transitions: false,
             }
         });
@@ -370,6 +459,8 @@ pub fn setup_player(
                 just_pressed_skill3: false,
                 pressing_skill4: false,
                 just_pressed_skill4: false,
+                pressing_up: false,
+                just_pressed_up: false,
             })
             .insert(TimeDivisions {
                 two: 0,

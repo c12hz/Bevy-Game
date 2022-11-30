@@ -34,7 +34,7 @@ pub fn player_deal_damage (
 
             //WHIRLWIND DAMAGE
             
-            if state.new.2 == PlayerAnimationState::Whirlwind && *cooldown == 0 {
+            if state.new.2 == PlayerAnimationState::WhirlwindHammer && *cooldown == 0 {
                 let mut targets_right = Vec::new();
                 let mut targets_left = Vec::new();
                 if sprite.index == 1 || sprite.index == 3 {

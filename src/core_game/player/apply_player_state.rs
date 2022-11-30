@@ -392,22 +392,22 @@ pub fn apply_player_state (
 
             // DASH
 
-            if state.new.0 == PlayerMoveState::Dash {
+            if state.new.0 == PlayerMoveState::DashForward {
                 velocity.y = 0.0;
                 velocity.x = 7.0 * looking_direction;
             }
-            if state.old.0 == PlayerMoveState::Dash && state.new.0 == PlayerMoveState::Idle {
+            if state.old.0 == PlayerMoveState::DashForward && state.new.0 == PlayerMoveState::Idle {
                 velocity.x = 0.0;
             }
 
 
             // DASH STRIKE
 
-            if state.new.0 == PlayerMoveState::DashStrike {
+            if state.new.0 == PlayerMoveState::DashDown45 {
                 velocity.y = -6.0;
                 velocity.x = 6.0 * looking_direction;
             }
-            if state.old.0 == PlayerMoveState::DashStrike && state.new.0 != PlayerMoveState::DashStrike {
+            if state.old.0 == PlayerMoveState::DashDown45 && state.new.0 != PlayerMoveState::DashDown45 {
                 velocity.x = 0.0;
                 velocity.y = 0.0;
             }
@@ -423,24 +423,11 @@ pub fn apply_player_state (
 
             // ADD "FRICTION" BETWEEN PLAYER AND ENEMIES
             if var.penetrating_enemy {
-                if !(state.new.0 == PlayerMoveState::Dash || state.new.0 == PlayerMoveState::DashStrike) {
+                if !(state.new.0 == PlayerMoveState::DashForward || state.new.0 == PlayerMoveState::DashDown45) {
                     velocity.x = ((velocity.x / 1.2) * 8.0).round() / 8.0;
                 }
                 
             }
-
-
-            // RESET INPUTS
-            input.just_pressed_jump = false;
-            input.just_pressed_left = false;
-            input.just_pressed_right = false;
-            input.just_pressed_dodge = false;
-            input.just_pressed_skill1 = false;
-            input.just_pressed_skill2 = false;
-            input.just_pressed_skill3 = false;
-            input.just_pressed_skill4 = false;
-
-
         }
     }
 }

@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
-use crate::creature::Creature;
-use crate::creature::Vel;
+use crate::core_game::creature::creature_structs::Creature;
+use crate::core_game::creature::creature_structs::Vel;
 
 
 

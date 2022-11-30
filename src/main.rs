@@ -4,6 +4,10 @@ use bevy_rapier2d::prelude::*;
 //use std::time::Duration;
 use bevy::window::PresentMode;
 use bevy::render::texture::ImageSettings;
+<<<<<<< Updated upstream
+=======
+use bevy_inspector_egui::{WorldInspectorPlugin, RegisterInspectable};
+>>>>>>> Stashed changes
 
 mod core;
 mod core_game;
@@ -67,6 +71,13 @@ fn main() {
         .add_plugin(core::setup::SetupPlugin)
         .add_plugin(core_game::world::WorldPlugin)
         .add_plugin(core_game::player::PlayerPlugin)
+<<<<<<< Updated upstream
+=======
+        .add_plugin(core_game::creature::CreaturePlugin)
+        .add_plugin(WorldInspectorPlugin::new())
+        .register_inspectable::<core_game::player::player_structs::PlayerAbilities>()
+        .register_inspectable::<core_game::player::player_structs::PlayerWeapons>()
+>>>>>>> Stashed changes
         .run();
 }
 

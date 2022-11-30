@@ -5,18 +5,18 @@ use bevy_rapier2d::{
     rapier::prelude::Group,
 };
 
-use crate::creature::Creature;
-use crate::creature::CreatureGraphics;
-use crate::creature::CreatureState;
-use crate::creature::CreatureStateVariables;
-use crate::creature::CreatureUsefulVariables;
-use crate::creature::Vel;
-use crate::creature::MoveSpeed;
-use crate::creature::CreatureMoveState;
+use crate::core_game::creature::creature_structs::Creature;
+use crate::core_game::creature::creature_structs::CreatureGraphics;
+use crate::core_game::creature::creature_structs::CreatureState;
+use crate::core_game::creature::creature_structs::CreatureStateVariables;
+use crate::core_game::creature::creature_structs::CreatureUsefulVariables;
+use crate::core_game::creature::creature_structs::Vel;
+use crate::core_game::creature::creature_structs::MoveSpeed;
+use crate::core_game::creature::creature_structs::CreatureMoveState;
 
-use crate::player::Player;
+use crate::core_game::player::player_structs::Player;
 
-use super::CreatureGraphicsEntity;
+use crate::core_game::creature::creature_structs::CreatureGraphicsEntity;
 
 
 
@@ -83,10 +83,10 @@ pub fn apply_creature_state (
                     }
         
                     if *reset_velocity == true {
-                        if sprite.flip_x == false {
+                        if sprite.flip_x == true {
                             velocity.x = speed.x;
                         }
-                        if sprite.flip_x == true {
+                        if sprite.flip_x == false {
                             velocity.x = -speed.x;
                         }
                     }
@@ -111,11 +111,11 @@ pub fn apply_creature_state (
 
                 if state.new.0 == CreatureMoveState::Idle {
                     if velocity.x > 0.0 {
-                        velocity.x -= 0.25;
+                        velocity.x -= 0.125;
                     }
 
                     if velocity.x < 0.0 {
-                        velocity.x += 0.25;
+                        velocity.x += 0.125;
                     }
                 }
 
@@ -194,18 +194,18 @@ pub fn apply_creature_state (
                 // SPRITE FLIP
 
                 if velocity.x < 0.0 {
-                    sprite.flip_x = true;
+                    sprite.flip_x = false;
                 }
                 if velocity.x > 0.0 {
-                    sprite.flip_x = false;
+                    sprite.flip_x = true;
                 }
 
                 if state.new.0 == CreatureMoveState::Attack {
                     if transform.translation.x - transform_player.translation.x < 0.0 {
-                        sprite.flip_x = false;
+                        sprite.flip_x = true;
                     }
                     if transform.translation.x - transform_player.translation.x > 0.0 {
-                        sprite.flip_x = true;
+                        sprite.flip_x = false;
                     }
                 }
             }

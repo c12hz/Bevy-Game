@@ -1,15 +1,6 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-pub mod setup_creature;
-pub mod periodic_spawn;
-pub mod transfer_data_creature;
-pub mod creature_get_damage;
-pub mod set_creature_state;
-pub mod apply_creature_state;
-pub mod creature_movement;
-pub mod creature_death;
-
 
 /// Marker that goes on the creature main entity
 #[derive(Component)]
@@ -20,29 +11,29 @@ pub struct CreatureGraphics;
 
 /// Extra component for the main entity, to store the id of the associated graphics entity
 #[derive(Component)]
-pub struct CreatureGraphicsEntity(Entity);
+pub struct CreatureGraphicsEntity( pub Entity );
 
 
 
 #[derive(Component, Clone)]
 pub struct Vel {
-    x: f32,
-    y: f32,
-    dir: f32,
+    pub x: f32,
+    pub y: f32,
+    pub dir: f32,
 }
 
 #[derive(Component, Clone)]
 pub struct MoveSpeed {
-    x: f32,
-    y: f32,
+    pub x: f32,
+    pub y: f32,
 }
 
 
 #[derive(Component)]
 pub struct CreatureSpawnPoint {
-    current: Option<Entity>,
-    timer: Timer,
-    position: Transform,
+    pub current: Option<Entity>,
+    pub timer: Timer,
+    pub position: Transform,
 }
 
 #[derive(Component, Debug, Clone, Copy, PartialEq)]
@@ -72,45 +63,68 @@ pub enum CreatureAnimationState {
 
 #[derive(Component, Clone)]
 pub struct AnimationParams {
-    atlas: Handle<TextureAtlas>,
-    start: usize,
-    restart: usize,
-    end: usize,
-    perfect_transitions: bool,
+    pub atlas: Handle<TextureAtlas>,
+    pub start: usize,
+    pub restart: usize,
+    pub end: usize,
+    pub perfect_transitions: bool,
 }
 
 pub struct MyCreatureAnimations {
-    idle: AnimationParams,
+    pub idle: AnimationParams,
+    pub walkf: AnimationParams,
+    pub atk: AnimationParams,
+
 }
 
+
+
+#[derive(Component, Clone)]
+pub struct TimeDivisions {
+    pub two: u32,
+    pub three: u32,
+    pub four: u32,
+    pub five: u32,
+    pub six: u32,
+    pub seven: u32,
+    pub eight: u32,
+    pub nine: u32,
+    pub ten: u32,
+    pub eleven: u32,
+    pub twelve: u32,
+    pub thirteen: u32,
+    pub fourteen: u32,
+    pub fifteen: u32,
+    pub reset: bool,
+}
 
 
 
 
 #[derive(Component, Debug)]
 pub struct CreatureState {
-    old: (CreatureMoveState, CreatureDirectionState, CreatureAnimationState),
-    new: (CreatureMoveState, CreatureDirectionState, CreatureAnimationState),
+    pub old: (CreatureMoveState, CreatureDirectionState, CreatureAnimationState),
+    pub new: (CreatureMoveState, CreatureDirectionState, CreatureAnimationState),
 }
 
 
 #[derive(Component)]
 pub struct CreatureStateVariables {
-    chase_direction: f32,
-    patrol_timer: u32,
-    idle_timer: u32,
-    reset_velocity: bool,
-    attack_range_offset: f32,
+    pub chase_direction: f32,
+    pub patrol_timer: u32,
+    pub idle_timer: u32,
+    pub reset_velocity: bool,
+    pub attack_range_offset: f32,
 }
 
 
 #[derive(Component, Clone)]
 pub struct CreatureUsefulVariables {
-    chase_delay: u32,
-    attack_delay: u32,
+    pub chase_delay: u32,
+    pub attack_delay: u32,
 }
 
 #[derive(Component, Clone)]
 pub struct CreatureStats {
-    life: f32,
+    pub life: f32,
 }

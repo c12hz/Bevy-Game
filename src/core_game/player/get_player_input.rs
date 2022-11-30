@@ -1,6 +1,10 @@
 use bevy::prelude::*;
 
 use crate::core_game::player::player_structs::PlayerInput;
+<<<<<<< Updated upstream:src/core_game/player/get_player_input.rs
+=======
+
+>>>>>>> Stashed changes:src/player/get_player_input.rs
 
 
 pub fn get_player_input (
@@ -10,7 +14,7 @@ pub fn get_player_input (
 
     for mut input in qinput.iter_mut() {
 
-        // RESET INPUTS
+        // RESET 'PRESSING' INPUTS
         input.pressing_jump = false;
         input.pressing_left = false;
         input.pressing_right = false;
@@ -19,6 +23,7 @@ pub fn get_player_input (
         input.pressing_skill2 = false;
         input.pressing_skill3 = false;
         input.pressing_skill4 = false;
+        input.pressing_up = false;
 
 
 
@@ -93,6 +98,16 @@ pub fn get_player_input (
         if keys.just_pressed(KeyCode::L) {
             input.just_pressed_skill4 = true;
         }
+
+        // SKILL4
+        if keys.pressed(KeyCode::I) {
+            input.pressing_up= true;
+        }
+
+        if keys.just_pressed(KeyCode::I) {
+            input.just_pressed_up = true;
+        }
+        
 
 
 

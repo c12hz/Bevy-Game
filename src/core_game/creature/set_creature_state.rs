@@ -6,13 +6,13 @@ use bevy_rapier2d::{
     rapier::prelude::Group,
 };
 
-use crate::creature::Creature;
-use crate::creature::CreatureState;
-use crate::creature::CreatureStateVariables;
-use crate::creature::CreatureMoveState;
+use crate::core_game::creature::creature_structs::Creature;
+use crate::core_game::creature::creature_structs::CreatureState;
+use crate::core_game::creature::creature_structs::CreatureStateVariables;
+use crate::core_game::creature::creature_structs::CreatureMoveState;
 
-use crate::player::StealthMode;
-use crate::player::Player;
+use crate::core_game::player::player_structs::StealthMode;
+use crate::core_game::player::player_structs::Player;
 
 
 

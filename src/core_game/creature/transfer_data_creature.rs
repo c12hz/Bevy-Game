@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 
-use crate::creature::Creature;
-use crate::creature::CreatureGraphics;
+use crate::core_game::creature::creature_structs::Creature;
+use crate::core_game::creature::creature_structs::CreatureGraphics;
 
-use super::CreatureGraphicsEntity;
+use crate::core_game::creature::creature_structs::CreatureGraphicsEntity;
 
 
 
@@ -20,7 +20,7 @@ pub fn transfer_data_creature(
             trans.translation = (transform.translation * 4.0).round() / 4.0;
 
             //the function below offsets the graphic entity's vertical position so that the head goes slightly above the collider box
-            trans.translation.y = trans.translation.y;
+            trans.translation.y = trans.translation.y + 3.0;
         } else {
             // there was a problem querying the graphics entity
             commands.entity(e).despawn_recursive();

@@ -7,9 +7,16 @@ use crate::core_game::player::player_structs::PlayerAnimationState;
 use crate::core_game::player::player_structs::PlayerDirectionState;
 use crate::core_game::player::player_structs::Vel;
 use crate::core_game::player::player_structs::TimeDivisions;
+<<<<<<< Updated upstream:src/core_game/player/switch_animation.rs
 
 use crate::core_game::player::player_structs::Player;
 use crate::core_game::player::player_structs::PlayerGraphics;
+=======
+
+use crate::core_game::player::player_structs::Player;
+use crate::core_game::player::player_structs::PlayerGraphics;
+
+>>>>>>> Stashed changes:src/player/switch_animation.rs
 
 pub fn switch_animation(
     anims: Option<Res<MyPlayerAnimations>>,
@@ -63,7 +70,7 @@ pub fn switch_animation(
                 }
 
 
-                if state.new.2 == PlayerAnimationState::Whirlwind {
+                if state.new.2 == PlayerAnimationState::WhirlwindHammer {
                     commands.entity(e).insert(anims.whirl.clone());
                 }
 
@@ -83,29 +90,63 @@ pub fn switch_animation(
                     commands.entity(e).insert(anims.fallidle.clone());
                 }
 
-                if state.new.2 == PlayerAnimationState::SwordHitBasic {
-                    if keys.just_pressed(KeyCode::G) {
+                if state.new.2 == PlayerAnimationState::MeleeBasicSword {
+                    if state.new.3 != state.old.3 {
                         *clock = !*clock;
                     }
 
                     if *clock == true {
-                        commands.entity(e).insert(anims.swdatkbsc1.clone());
+                        commands.entity(e).insert(anims.mbs1.clone());
                     }
                     else {
-                        commands.entity(e).insert(anims.swdatkbsc2.clone());
+                        commands.entity(e).insert(anims.mbs2.clone());
                     }
                 }
 
-                if state.new.2 == PlayerAnimationState::HammerHitBasic {
-                    if keys.just_pressed(KeyCode::B) {
+                if state.new.2 == PlayerAnimationState::MeleeBasicHammer {
+                    if state.new.3 != state.old.3 {
                         *clock = !*clock;
                     }
 
                     if *clock == true {
-                        commands.entity(e).insert(anims.hmratkbsc1.clone());
+                        commands.entity(e).insert(anims.mbh1.clone());
                     }
                     else {
-                        commands.entity(e).insert(anims.hmratkbsc2.clone());
+                        commands.entity(e).insert(anims.mbh2.clone());
+                    }
+                }
+
+                if state.new.2 == PlayerAnimationState::RangedBasicBowForward {
+                    commands.entity(e).insert(anims.rbbf.clone());
+                }
+
+                if state.new.2 == PlayerAnimationState::RangedBasicBowUp {
+                    commands.entity(e).insert(anims.rbbu.clone());
+                }
+
+                if state.new.2 == PlayerAnimationState::RangedBasicGunsForward {
+                    if state.new.3 != state.old.3 {
+                        *clock = !*clock;
+                    }
+
+                    if *clock == true {
+                        commands.entity(e).insert(anims.rbgf1.clone());
+                    }
+                    else {
+                        commands.entity(e).insert(anims.rbgf2.clone());
+                    }
+                }
+
+                if state.new.2 == PlayerAnimationState::RangedBasicGunsUp {
+                    if state.new.3 != state.old.3 {
+                        *clock = !*clock;
+                    }
+
+                    if *clock == true {
+                        commands.entity(e).insert(anims.rbgu1.clone());
+                    }
+                    else {
+                        commands.entity(e).insert(anims.rbgu2.clone());
                     }
                 }
             }

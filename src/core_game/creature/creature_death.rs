@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 
-use crate::creature::Creature;
-use crate::creature::CreatureStats;
-use crate::creature::CreatureGraphics;
-use crate::creature::CreatureGraphicsEntity;
+use crate::core_game::creature::creature_structs::Creature;
+use crate::core_game::creature::creature_structs::CreatureStats;
+use crate::core_game::creature::creature_structs::CreatureGraphics;
+use crate::core_game::creature::creature_structs::CreatureGraphicsEntity;
 
 
 

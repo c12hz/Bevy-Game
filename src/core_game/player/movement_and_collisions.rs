@@ -87,7 +87,7 @@ pub fn movement_and_collisions(
             );
             if hit1.is_none() {
 
-                transform.translation.x = (transform.translation.x * 8.0).round() / 8.0;
+                //transform.translation.x = (transform.translation.x * 8.0).round() / 8.0;
             }
 
             let hit2 = rapier_context.cast_shape(
@@ -101,7 +101,7 @@ pub fn movement_and_collisions(
             );
             if hit2.is_none() {
 
-                transform.translation.y = (transform.translation.y * 8.0).round() / 8.0;
+                //transform.translation.y = (transform.translation.y * 8.0).round() / 8.0;
             }
             
         }
@@ -118,7 +118,7 @@ pub fn movement_and_collisions(
             );
             if hit3.is_none() {
 
-                transform.translation = (transform.translation * 8.0).round() / 8.0;
+                //transform.translation = (transform.translation * 8.0).round() / 8.0;
             }
 
 
