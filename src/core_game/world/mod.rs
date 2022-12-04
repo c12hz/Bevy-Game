@@ -8,10 +8,7 @@ pub mod setup_world;
 pub mod spawn_wall_collision;
 
 use crate::core_game::player;
-<<<<<<< Updated upstream
-=======
 use crate::core_game::creature;
->>>>>>> Stashed changes
 
 pub struct WorldPlugin;
 
@@ -20,13 +17,8 @@ impl Plugin for WorldPlugin {
         app
             .add_startup_system(setup_world::setup_world.label("setup_world"))
             .add_system(player::setup_player::setup_player.after("setup_world"))
-<<<<<<< Updated upstream
-            //.add_system(setup_creature.label("setup_creature").after("setup_world"))
-            //.add_system(periodic_spawn.after("setup_creature"))
-=======
             .add_system(creature::setup_creature::setup_creature.label("setup_creature").after("setup_world"))
             .add_system(creature::periodic_spawn::periodic_spawn.after("setup_creature"))
->>>>>>> Stashed changes
             .add_system(player::setup_camera::setup_camera.after("setup_world"))
             .add_system(spawn_wall_collision::spawn_wall_collision)
             .add_system(player::get_player_input::get_player_input)

@@ -229,8 +229,6 @@ dependencies = [
 ]
 
 [[package]]
-<<<<<<< Updated upstream
-=======
 name = "bevy-inspector-egui"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -255,7 +253,6 @@ dependencies = [
 ]
 
 [[package]]
->>>>>>> Stashed changes
 name = "bevy_animation"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1711,10 +1708,7 @@ name = "game"
 version = "0.1.0"
 dependencies = [
  "bevy",
-<<<<<<< Updated upstream
-=======
  "bevy-inspector-egui",
->>>>>>> Stashed changes
  "bevy_ecs_ldtk",
  "bevy_rapier2d",
  "iyes_loopless",
@@ -1722,8 +1716,6 @@ dependencies = [
 ]
 
 [[package]]
-<<<<<<< Updated upstream
-=======
 name = "gethostname"
 version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1734,7 +1726,6 @@ dependencies = [
 ]
 
 [[package]]
->>>>>>> Stashed changes
 name = "getrandom"
 version = "0.2.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"

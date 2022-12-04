@@ -85,12 +85,17 @@ pub fn set_creature_state (
         for stealth in query_player.iter() {
 
 
+            // PATROL STATE
+
             if (look_right.is_none() && look_left.is_none()) || stealth.active {
                 if var.patrol_timer > 0 {
                     state.old.0 = state.new.0;
                     state.new.0 = CreatureMoveState::Patrol;
                     var.patrol_timer -= 1;
                 }
+
+            // IDLE STATE
+            
                 if var.patrol_timer == 0 {
                     state.old.0 = state.new.0;
                     state.new.0 = CreatureMoveState::Idle;
@@ -133,7 +138,7 @@ pub fn set_creature_state (
                             );
                             if let Some((player, toi2)) = look_right {
                                 if let TOIStatus::Converged = toi2.status {
-                                    if (toi2.witness2.x - transform.translation.x).abs() < (toi1.witness2.x - transform.translation.x).abs() {
+                                    if (toi2.witness1.x - transform.translation.x).abs() < (toi1.witness1.x - transform.translation.x).abs() {
                                         state.old.0 = state.new.0;
                                         state.new.0 = CreatureMoveState::Chase;
                                         var.chase_direction = 1.0;
@@ -178,7 +183,7 @@ pub fn set_creature_state (
                             );
                             if let Some(((player, toi2))) = look_left {
                                 if let TOIStatus::Converged = toi2.status {
-                                    if (toi2.witness2.x  - transform.translation.x).abs() < (toi1.witness2.x - transform.translation.x).abs() {
+                                    if (toi2.witness1.x  - transform.translation.x).abs() < (toi1.witness1.x - transform.translation.x).abs() {
                                         state.old.0 = state.new.0;
                                         state.new.0 = CreatureMoveState::Chase;
                                         var.chase_direction = -1.0;

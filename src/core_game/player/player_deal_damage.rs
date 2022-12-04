@@ -25,12 +25,146 @@ pub fn player_deal_damage (
 
             let whirl_cast = 20.0;
             let whirl_offset = 12.0;
+            let mbh_cast = 10.0;
+            let mbs_cast = 10.0;
+            let rbg_cast = 512.0;
             let cooldown_timer = 5;
+            let mut hit_frame:usize = 1000;
+            let mut flip_value = 0.0;
+            let hammer_hit_frame:usize = 1;
+            let sword_hit_frame:usize = 1;
+            let guns_hit_frame:usize = 0;
+
 
             damage.dealt = false;
             damage.applied = false;
+            if sprite.flip_x {
+                flip_value = -1.0
+            }
+            else {
+                flip_value = 1.0
+            }
 
-       
+            //MELEE BASIC HAMMER DAMAGE
+            
+            if state.new.2 == PlayerAnimationState::MeleeBasicHammer && *cooldown == 0 {
+                hit_frame = hammer_hit_frame;
+
+                if sprite.index == hit_frame {
+                    let mut targets = Vec::new();
+                    loop {
+                        let hit_mbh = rapier_context.cast_shape(
+                            transform.translation.truncate(),
+                            0.0,
+                            Vec2::new(mbh_cast * flip_value, 0.0),
+                            collider,
+                            1.0,
+                            QueryFilter::default()
+                            .groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_3))
+                            .predicate(
+                            &|e| {
+                                !targets.iter().any(|t| *t == e)
+                            }),
+                        );
+
+                        if let Some((entity,_toii)) = hit_mbh {
+                            targets.push(entity);
+                        } else {
+                            break;
+                        }
+                    }
+
+                    damage.dealt = true;
+                    damage.kind = DamageKind::Whirlwind;
+                    damage.kind_mult = stats.whirlwind_mult;
+                    *cooldown = cooldown_timer;
+                    damage.targets = targets;
+                    damage.direction = flip_value
+                }
+            }
+
+
+
+            //MELEE BASIC SWORD DAMAGE
+
+            if state.new.2 == PlayerAnimationState::MeleeBasicSword && *cooldown == 0{
+                hit_frame = sword_hit_frame;
+
+                if sprite.index == hit_frame {
+                    let mut targets = Vec::new();
+                    loop {
+                        let hit_mbs = rapier_context.cast_shape(
+                            transform.translation.truncate(),
+                            0.0,
+                            Vec2::new(mbs_cast * flip_value, 0.0),
+                            collider,
+                            1.0,
+                            QueryFilter::default()
+                            .groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_1))
+                            .predicate(
+                            &|e| {
+                                !targets.iter().any(|t| *t == e)
+                            }),
+                        );
+
+                        if let Some((entity,_toii)) = hit_mbs {
+                            targets.push(entity);
+                        } else {
+                            break;
+                        }
+                    }
+
+                    damage.dealt = true;
+                    damage.kind = DamageKind::Whirlwind;
+                    damage.kind_mult = stats.whirlwind_mult;
+                    *cooldown = cooldown_timer;
+                    damage.targets = targets;
+                    damage.direction = flip_value
+                }
+            }
+
+
+
+
+            //RANGED BASIC GUNS FORWARD DAMAGE
+
+            if state.new.2 == PlayerAnimationState::RangedBasicGunsForward && *cooldown == 0 {
+                hit_frame = sword_hit_frame;
+
+                if sprite.index == hit_frame {
+                    let mut targets = Vec::new();
+                    loop {
+                        let hit_rbg = rapier_context.cast_shape(
+                            transform.translation.truncate(),
+                            0.0,
+                            Vec2::new(rbg_cast * flip_value, 0.0),
+                            collider,
+                            1.0,
+                            QueryFilter::default()
+                            .groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_3))
+                            .predicate(
+                            &|e| {
+                                !targets.iter().any(|t| *t == e)
+                            }),
+                        );
+
+                        if let Some((entity,_toii)) = hit_rbg {
+                            targets.push(entity);
+                        } else {
+                            break;
+                        }
+                    }
+
+                    damage.dealt = true;
+                    damage.kind = DamageKind::Whirlwind;
+                    damage.kind_mult = stats.whirlwind_mult;
+                    *cooldown = cooldown_timer;
+                    damage.targets = targets;
+                    damage.direction = flip_value
+                }
+            }
+
+
 
             //WHIRLWIND DAMAGE
             
@@ -47,7 +181,7 @@ pub fn player_deal_damage (
                                 collider,
                                 1.0,
                                 QueryFilter::default()
-                                .groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_1))
+                                .groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_3))
                                 .predicate(
                                 &|e| {
                                     !targets_right.iter().any(|t| *t == e)
@@ -66,6 +200,7 @@ pub fn player_deal_damage (
                         damage.kind_mult = stats.whirlwind_mult;
                         *cooldown = cooldown_timer;
                         damage.targets = targets_right;
+                        damage.direction = 1.0;
                     }
 
                     if (sprite.index == 1 && sprite.flip_x == true) || (sprite.index == 3 && sprite.flip_x == false) {
@@ -77,7 +212,7 @@ pub fn player_deal_damage (
                                 collider,
                                 1.0,
                                 QueryFilter::default()
-                                .groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_1))
+                                .groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_3))
                                 .predicate(
                                 &|e| {
                                     !targets_left.iter().any(|t| *t == e)
@@ -96,9 +231,13 @@ pub fn player_deal_damage (
                         damage.kind_mult = stats.whirlwind_mult;
                         *cooldown = cooldown_timer;
                         damage.targets = targets_left;
+                        damage.direction = -1.0;
                     }
                 }
             }
+
+
+
 
             // THIS COOLDOWN ENSURES DAMAGE CAN ONLY BE DEALT ONCE PER FRAME OF ANIMATION
 

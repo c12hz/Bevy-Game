@@ -7,10 +7,7 @@ use bevy_rapier2d::{
 use crate::core_game::player::player_structs::PlayerState;
 use crate::core_game::player::player_structs::PlayerMoveState;
 use crate::core_game::player::player_structs::PlayerDirectionState;
-<<<<<<< Updated upstream:src/core_game/player/set_player_state.rs
-=======
 use crate::core_game::player::player_structs::PlayerAttackState;
->>>>>>> Stashed changes:src/core_game/player/set_move_state.rs
 use crate::core_game::player::player_structs::PlayerStateVariables;
 use crate::core_game::player::player_structs::Player;
 use crate::core_game::player::player_structs::StealthMode;
@@ -33,6 +30,9 @@ pub fn set_move_state (
     rapier_context: Res<RapierContext>,
 ) {
     
+
+
+
     for (collider, transform, damage, mut state, mut var, mut stealth, input) in query.iter_mut() {
 
         let move_left = input.pressing_left;

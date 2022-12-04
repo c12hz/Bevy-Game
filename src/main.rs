@@ -4,10 +4,7 @@ use bevy_rapier2d::prelude::*;
 //use std::time::Duration;
 use bevy::window::PresentMode;
 use bevy::render::texture::ImageSettings;
-<<<<<<< Updated upstream
-=======
 use bevy_inspector_egui::{WorldInspectorPlugin, RegisterInspectable};
->>>>>>> Stashed changes
 
 mod core;
 mod core_game;
@@ -56,7 +53,7 @@ fn main() {
         .insert_resource(Msaa { samples: 1 })
         .insert_resource(
             WindowDescriptor {
-                present_mode: PresentMode::Mailbox,
+                present_mode: PresentMode::Fifo,
                 title: core::GAME_NAME.to_string(),
                 resizable: true,
                 width: 1920.0,
@@ -67,17 +64,14 @@ fn main() {
         .insert_resource(ImageSettings::default_nearest())
         .add_plugins(DefaultPlugins)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
-        .add_plugin(RapierDebugRenderPlugin::default())
+        //.add_plugin(RapierDebugRenderPlugin::default())
         .add_plugin(core::setup::SetupPlugin)
         .add_plugin(core_game::world::WorldPlugin)
         .add_plugin(core_game::player::PlayerPlugin)
-<<<<<<< Updated upstream
-=======
         .add_plugin(core_game::creature::CreaturePlugin)
         .add_plugin(WorldInspectorPlugin::new())
         .register_inspectable::<core_game::player::player_structs::PlayerAbilities>()
         .register_inspectable::<core_game::player::player_structs::PlayerWeapons>()
->>>>>>> Stashed changes
         .run();
 }
 

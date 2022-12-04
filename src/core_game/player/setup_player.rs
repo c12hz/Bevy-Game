@@ -9,10 +9,7 @@ use crate::core_game::player::player_structs::Vel;
 use crate::core_game::player::player_structs::PlayerInput;
 use crate::core_game::player::player_structs::PlayerMoveState;
 use crate::core_game::player::player_structs::PlayerDirectionState;
-<<<<<<< Updated upstream:src/core_game/player/setup_player.rs
-=======
 use crate::core_game::player::player_structs::PlayerAttackState;
->>>>>>> Stashed changes:src/player/setup_player.rs
 use crate::core_game::player::player_structs::PlayerAnimationState;
 use crate::core_game::player::player_structs::PlayerStateVariables;
 use crate::core_game::player::player_structs::PlayerState;
@@ -20,15 +17,11 @@ use crate::core_game::player::player_structs::Player;
 use crate::core_game::player::player_structs::WallKick;
 use crate::core_game::player::player_structs::PlayerDamage;
 use crate::core_game::player::player_structs::DamageKind;
-<<<<<<< Updated upstream:src/core_game/player/setup_player.rs
-use crate::core_game::player::player_structs::DamageWeapon;
-=======
 use crate::core_game::player::player_structs::PlayerWeapons;
 use crate::core_game::player::player_structs::PlayerWeaponMelee;
 use crate::core_game::player::player_structs::PlayerWeaponRanged;
 use crate::core_game::player::player_structs::Ability;
 use crate::core_game::player::player_structs::PlayerAbilities;
->>>>>>> Stashed changes:src/player/setup_player.rs
 use crate::core_game::player::player_structs::PlayerDamageStats;
 use crate::core_game::player::player_structs::StealthMode;
 use crate::core_game::player::player_structs::AnimationParams;
@@ -45,7 +38,7 @@ pub fn setup_player(
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
     query: Query<(Entity, &EntityInstance), Added<EntityInstance>>,
 ) {
-    for (_e, ldtk_entity_info) in query.iter() {
+    for (e, ldtk_entity_info) in query.iter() {
         if ldtk_entity_info.identifier != "Player" {
             continue;
         }
@@ -134,6 +127,7 @@ pub fn setup_player(
                 weapon_dmg: 24.0,
                 crit: false,
                 value: 0.0,
+                direction: 1.0,
             })
             .insert(PlayerDamageStats {
                 hammer_damage: 60.0,

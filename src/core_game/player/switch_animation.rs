@@ -7,16 +7,10 @@ use crate::core_game::player::player_structs::PlayerAnimationState;
 use crate::core_game::player::player_structs::PlayerDirectionState;
 use crate::core_game::player::player_structs::Vel;
 use crate::core_game::player::player_structs::TimeDivisions;
-<<<<<<< Updated upstream:src/core_game/player/switch_animation.rs
-
-use crate::core_game::player::player_structs::Player;
-use crate::core_game::player::player_structs::PlayerGraphics;
-=======
 
 use crate::core_game::player::player_structs::Player;
 use crate::core_game::player::player_structs::PlayerGraphics;
 
->>>>>>> Stashed changes:src/player/switch_animation.rs
 
 pub fn switch_animation(
     anims: Option<Res<MyPlayerAnimations>>,
@@ -35,7 +29,7 @@ pub fn switch_animation(
             if state.new.2 != PlayerAnimationState::Fall {
                 *float_counter = 0;
             }
-            for (e, _time) in player_query.iter() {
+            for (e, time) in player_query.iter() {
 
 
                 if state.new.2 == PlayerAnimationState::Run {

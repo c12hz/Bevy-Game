@@ -68,7 +68,7 @@ pub fn set_attack_state (
         let mbs:u32 =  3;
         let rbb:u32 =  4;
         let rbg:u32 =  3;
-        let df:u32  =  2;
+        let df:u32  =  1;
         let dd45:u32 = 10;
 
         if *timer_mbh | *timer_mbs | *timer_rbbf | *timer_rbbu | *timer_rbgf | *timer_rbgu | *timer_df | *timer_dd45 != 0 {

@@ -1,10 +1,7 @@
 use bevy::prelude::*;
 
 use crate::core_game::player::player_structs::PlayerInput;
-<<<<<<< Updated upstream:src/core_game/player/get_player_input.rs
-=======
 
->>>>>>> Stashed changes:src/player/get_player_input.rs
 
 
 pub fn get_player_input (

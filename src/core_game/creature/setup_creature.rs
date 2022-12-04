@@ -3,22 +3,22 @@ use std::time::Duration;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
-use crate::creature::Creature;
-use crate::creature::CreatureGraphics;
-use crate::creature::MyCreatureAnimations;
-use crate::creature::AnimationParams;
-use crate::creature::Vel;
-use crate::creature::MoveSpeed;
-use crate::creature::CreatureMoveState;
-use crate::creature::CreatureDirectionState;
-use crate::creature::CreatureAnimationState;
-use crate::creature::CreatureState;
-use crate::creature::CreatureStateVariables;
-use crate::creature::CreatureSpawnPoint;
-use crate::creature::CreatureStats;
+use crate::core_game::creature::creature_structs::Creature;
+use crate::core_game::creature::creature_structs::CreatureGraphics;
+use crate::core_game::creature::creature_structs::MyCreatureAnimations;
+use crate::core_game::creature::creature_structs::AnimationParams;
+use crate::core_game::creature::creature_structs::Vel;
+use crate::core_game::creature::creature_structs::MoveSpeed;
+use crate::core_game::creature::creature_structs::CreatureMoveState;
+use crate::core_game::creature::creature_structs::CreatureDirectionState;
+use crate::core_game::creature::creature_structs::CreatureAnimationState;
+use crate::core_game::creature::creature_structs::CreatureState;
+use crate::core_game::creature::creature_structs::CreatureStateVariables;
+use crate::core_game::creature::creature_structs::CreatureSpawnPoint;
+use crate::core_game::creature::creature_structs::CreatureStats;
 
-use super::CreatureGraphicsEntity;
-use super::CreatureUsefulVariables;
+use crate::core_game::creature::creature_structs::CreatureGraphicsEntity;
+use crate::core_game::creature::creature_structs::CreatureUsefulVariables;
 
 
 

@@ -11,14 +11,9 @@ use crate::core_game::player::player_structs::PlayerAnimationState;
 use crate::core_game::player::player_structs::PlayerDirectionState;
 use crate::core_game::player::player_structs::PlayerStateVariables;
 use crate::core_game::player::player_structs::Player;
-<<<<<<< Updated upstream:src/core_game/player/set_animation_state.rs
-
-use crate::core_game::player::player_structs::WallKick;
-=======
 use crate::core_game::player::player_structs::PlayerAttackState;
 use crate::core_game::player::player_structs::WallKick;
 use crate::core_game::player::player_structs::PlayerInput;
->>>>>>> Stashed changes:src/player/set_animation_state.rs
 
 
 
@@ -42,12 +37,7 @@ pub fn set_animation_state (
 
     let mut attacking = false;
 
-<<<<<<< Updated upstream:src/core_game/player/set_animation_state.rs
-
-    for (mut state, mut var, collider, transform, _wall) in query.iter_mut() {
-=======
     for (mut state, mut var, collider, transform, wall, input) in query.iter_mut() {
->>>>>>> Stashed changes:src/player/set_animation_state.rs
 
 
 

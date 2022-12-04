@@ -3,40 +3,27 @@ use bevy::{
     prelude::*,
 };
 use iyes_loopless::prelude::FixedTimestepStage;
-<<<<<<< Updated upstream
-=======
 use bevy_inspector_egui::{WorldInspectorPlugin, RegisterInspectable};
->>>>>>> Stashed changes
 
 pub mod player_structs;
 mod animate;
 mod apply_player_state;
 mod audio_test;
 pub mod get_player_input;
-<<<<<<< Updated upstream
-=======
 pub mod reset_player_input;
->>>>>>> Stashed changes
 mod move_camera;
 mod movement_and_collisions;
 mod player_deal_damage;
 mod screen_shake;
 mod set_animation_state;
-<<<<<<< Updated upstream
-mod set_player_state;
-=======
 mod set_move_state;
->>>>>>> Stashed changes
 pub mod setup_player;
 pub mod setup_camera;
 mod switch_animation;
 mod teleport_to_spawn;
 mod time_divisions;
 mod transfer_data;
-<<<<<<< Updated upstream
-=======
 mod set_attack_state;
->>>>>>> Stashed changes
 
 
 
@@ -46,21 +33,6 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         let mut fixed_first = SystemStage::parallel();
         fixed_first
-<<<<<<< Updated upstream
-        .add_system(set_player_state::set_player_state.label("set_state"))
-            .add_system(apply_player_state::apply_player_state.label("apply_state").after("set_state"))
-                .add_system(movement_and_collisions::movement_and_collisions.label("move").after("apply_state"))
-                    .add_system(teleport_to_spawn::teleport_to_spawn.after("move"))
-                    .add_system(transfer_data::transfer_data.after("move"))
-                    .add_system(move_camera::move_camera.label("move_camera").after("move"))
-                        .add_system(screen_shake::screen_shake.after("move_camera"))
-                .add_system(set_animation_state::set_animation_state.label("set_anim").after("apply_state"))           
-                    .add_system(switch_animation::switch_animation.label("switch_anim").after("set_anim"))
-                        .add_system(time_divisions::time_divisions.label("time").after("set_anim"))
-                            .add_system(animate::animate.after("time").label("animate"))
-                                .add_system(player_deal_damage::player_deal_damage.after("animate").label("deal_damage"));
-                            //.add_system(audio_test.after("time"))
-=======
         .add_system(set_attack_state::set_attack_state.label("set_attack_state"))
             .add_system(set_move_state::set_move_state.label("set_move_state").after("set_attack_state"))
                 .add_system(apply_player_state::apply_player_state.label("apply_state").after("set_move_state"))
@@ -76,7 +48,6 @@ impl Plugin for PlayerPlugin {
                                     .add_system(player_deal_damage::player_deal_damage.after("animate").label("deal_damage"))
                                         .add_system(reset_player_input::reset_player_input.after("deal_damage"));
                                 //.add_system(audio_test.after("time"))
->>>>>>> Stashed changes
 
         app.add_stage_before(
             CoreStage::Update,
@@ -84,23 +55,14 @@ impl Plugin for PlayerPlugin {
             FixedTimestepStage::new(Duration::from_nanos(16666667))
                 .with_stage(fixed_first)
         );
-<<<<<<< Updated upstream
-    
-=======
->>>>>>> Stashed changes
     }
 }
 
 /*
     let mut fixed_first = SystemStage::parallel();
     fixed_first
-<<<<<<< Updated upstream
-    .add_system(set_player_state.label("set_state"))
-        .add_system(apply_player_state.label("apply_state").after("set_state"))
-=======
     .add_system(set_player_state.label("set_move_state"))
         .add_system(apply_player_state.label("apply_state").after("set_move_state"))
->>>>>>> Stashed changes
             .add_system(movement_and_collisions.label("move").after("apply_state"))
                 .add_system(teleport_to_spawn.after("move"))
                 .add_system(transfer_data.after("move"))

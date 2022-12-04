@@ -200,7 +200,7 @@ pub fn apply_creature_state (
                     sprite.flip_x = true;
                 }
 
-                if state.new.0 == CreatureMoveState::Attack {
+                if state.new.0 == CreatureMoveState::Attack && sprite.index == 0 {
                     if transform.translation.x - transform_player.translation.x < 0.0 {
                         sprite.flip_x = true;
                     }

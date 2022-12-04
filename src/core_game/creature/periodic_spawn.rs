@@ -4,23 +4,24 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::{Collider, CollisionGroups, Group, RigidBody};
 use bevy_ecs_ldtk::prelude::*;
 
-use crate::creature::Creature;
-use crate::creature::CreatureGraphics;
-use crate::creature::MyCreatureAnimations;
-use crate::creature::AnimationParams;
-use crate::creature::Vel;
-use crate::creature::MoveSpeed;
-use crate::creature::CreatureMoveState;
-use crate::creature::CreatureDirectionState;
-use crate::creature::CreatureAnimationState;
-use crate::creature::CreatureState;
-use crate::creature::CreatureStateVariables;
-use crate::creature::CreatureStats;
+use crate::core_game::creature::creature_structs::Creature;
+use crate::core_game::creature::creature_structs::CreatureGraphics;
+use crate::core_game::creature::creature_structs::MyCreatureAnimations;
+use crate::core_game::creature::creature_structs::AnimationParams;
+use crate::core_game::creature::creature_structs::Vel;
+use crate::core_game::creature::creature_structs::MoveSpeed;
+use crate::core_game::creature::creature_structs::CreatureMoveState;
+use crate::core_game::creature::creature_structs::CreatureDirectionState;
+use crate::core_game::creature::creature_structs::CreatureAnimationState;
+use crate::core_game::creature::creature_structs::CreatureState;
+use crate::core_game::creature::creature_structs::CreatureStateVariables;
+use crate::core_game::creature::creature_structs::CreatureStats;
+use crate::core_game::creature::creature_structs::TimeDivisions;
 
-use crate::creature::CreatureSpawnPoint;
+use crate::core_game::creature::creature_structs::CreatureSpawnPoint;
 
-use super::CreatureGraphicsEntity;
-use super::CreatureUsefulVariables;
+use crate::core_game::creature::creature_structs::CreatureGraphicsEntity;
+use crate::core_game::creature::creature_structs::CreatureUsefulVariables;
 
 
 pub fn periodic_spawn(
@@ -65,7 +66,7 @@ pub fn periodic_spawn(
                             dir: 0.0,
                         })
                         .insert(MoveSpeed {
-                            x: 0.25,
+                            x: 0.125,
                             y: 0.0,
                         })
                         .insert(Creature)
@@ -79,6 +80,23 @@ pub fn periodic_spawn(
                             idle_timer: 0,
                             reset_velocity: true,
                             attack_range_offset: 0.0,
+                        })
+                        .insert(TimeDivisions {
+                            two: 0,
+                            three: 0,
+                            four: 0,
+                            five: 0,
+                            six: 0,
+                            seven: 0,
+                            eight: 0,
+                            nine: 0,
+                            ten: 0,
+                            eleven: 0,
+                            twelve: 0,
+                            thirteen: 0,
+                            fourteen: 0,
+                            fifteen: 0,
+                            reset: false,
                         })
                         .insert(CreatureUsefulVariables {
                             chase_delay: 0,
@@ -104,16 +122,36 @@ pub fn periodic_spawn(
                     // SET UP GRAPHICS ENTITY
 
                     let perfect_transitions = true;
-                    let texture_handle = asset_server.load("newcreaturetest.png");
-                    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(24.0, 12.0), 1, 1);
-                    let texture_atlas_handle = texture_atlases.add(texture_atlas);
+                    let texture_handle_idle = asset_server.load("animations/creature/IcePaukIdle.png");
+                    let texture_atlas_idle = TextureAtlas::from_grid(texture_handle_idle, Vec2::new(90.0, 90.0), 17, 1);
+                    let texture_atlas_handle_idle = texture_atlases.add(texture_atlas_idle);
+                    let texture_handle_walkf = asset_server.load("animations/creature/IcePaukWalk.png");
+                    let texture_atlas_walkf = TextureAtlas::from_grid(texture_handle_walkf, Vec2::new(90.0, 90.0), 10, 1);
+                    let texture_atlas_handle_walkf = texture_atlases.add(texture_atlas_walkf);
+                    let texture_handle_atk = asset_server.load("animations/creature/IcePaukOffensiveAttack.png");
+                    let texture_atlas_atk = TextureAtlas::from_grid(texture_handle_atk, Vec2::new(90.0, 90.0), 11, 1);
+                    let texture_atlas_handle_atk = texture_atlases.add(texture_atlas_atk);
 
                     commands.insert_resource(MyCreatureAnimations {
                         idle: AnimationParams {
-                            atlas: texture_atlas_handle.clone(),
+                            atlas: texture_atlas_handle_idle.clone(),
                             start: 0,
-                            restart: 3,
-                            end: 2,
+                            restart: 0,
+                            end: 17,
+                            perfect_transitions: true,
+                        },
+                        walkf: AnimationParams {
+                            atlas: texture_atlas_handle_walkf.clone(),
+                            start: 0,
+                            restart: 0,
+                            end: 10,
+                            perfect_transitions: true,
+                        },
+                        atk: AnimationParams {
+                            atlas: texture_atlas_handle_atk.clone(),
+                            start: 0,
+                            restart: 0,
+                            end: 11,
                             perfect_transitions: true,
                         }
                     });
@@ -122,18 +160,35 @@ pub fn periodic_spawn(
                     // spawn the entity
                     let e_graphics = commands
                         .spawn_bundle(SpriteSheetBundle {
-                            texture_atlas: texture_atlas_handle.clone(),
+                            texture_atlas: texture_atlas_handle_idle.clone(),
                             transform: Transform::from_translation(Vec3::new(0.0, 0.0, 0.0)),
                             visibility: Visibility { is_visible: true },
                             ..Default::default()
                         })
                         .insert(CreatureGraphics)
                         .insert(AnimationParams {
-                            atlas: texture_atlas_handle.clone(),
+                            atlas: texture_atlas_handle_idle.clone(),
                             start: 0,
-                            restart: 3,
-                            end: 2,
+                            restart: 0,
+                            end: 0,
                             perfect_transitions,
+                        })
+                        .insert(TimeDivisions {
+                            two: 0,
+                            three: 0,
+                            four: 0,
+                            five: 0,
+                            six: 0,
+                            seven: 0,
+                            eight: 0,
+                            nine: 0,
+                            ten: 0,
+                            eleven: 0,
+                            twelve: 0,
+                            thirteen: 0,
+                            fourteen: 0,
+                            fifteen: 0,
+                            reset: false,
                         })
                         .id();
 
