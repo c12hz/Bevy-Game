@@ -45,10 +45,9 @@ pub fn setup_creature(
 
         // SET UP PHYSICS ENTITY
         let spawn_point = commands
-            .spawn()
-            .insert(CreatureSpawnPoint {
+            .spawn(CreatureSpawnPoint {
                  current: None,
-                 timer: Timer::new(Duration::from_secs(2), false),
+                 timer: Timer::new(Duration::from_secs(2), TimerMode::Once),
                  position: transform,
              })
              .id();

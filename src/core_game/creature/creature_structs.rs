@@ -70,6 +70,7 @@ pub struct AnimationParams {
     pub perfect_transitions: bool,
 }
 
+#[derive(Resource)]
 pub struct MyCreatureAnimations {
     pub idle: AnimationParams,
     pub walkf: AnimationParams,

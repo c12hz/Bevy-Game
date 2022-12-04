@@ -55,33 +55,35 @@ pub fn periodic_spawn(
                     spawnpoint.timer.reset();
                     
                     
-                    let e_creature = commands.spawn()
-                        .insert_bundle(TransformBundle {
+                    let e_creature = commands.spawn((
+                        TransformBundle {
                             local: spawnpoint.position,
                             ..Default::default()
-                        })
-                        .insert(Vel {
+                        },
+                        Vel {
                             x: 0.0,
                             y: 0.0,
                             dir: 0.0,
-                        })
-                        .insert(MoveSpeed {
+                        },
+                        MoveSpeed {
                             x: 0.125,
                             y: 0.0,
-                        })
-                        .insert(Creature)
-                        .insert(CreatureState {
-                            old: (CreatureMoveState::Idle, CreatureDirectionState::None, CreatureAnimationState::Idle),
-                            new: (CreatureMoveState::Idle, CreatureDirectionState::None, CreatureAnimationState::Idle),
-                        })
-                        .insert(CreatureStateVariables {
-                            chase_direction: 1.0,
-                            patrol_timer: 0,
-                            idle_timer: 0,
-                            reset_velocity: true,
-                            attack_range_offset: 0.0,
-                        })
-                        .insert(TimeDivisions {
+                        },
+                        (
+                            Creature,
+                            CreatureState {
+                                old: (CreatureMoveState::Idle, CreatureDirectionState::None, CreatureAnimationState::Idle),
+                                new: (CreatureMoveState::Idle, CreatureDirectionState::None, CreatureAnimationState::Idle),
+                            },
+                            CreatureStateVariables {
+                                chase_direction: 1.0,
+                                patrol_timer: 0,
+                                idle_timer: 0,
+                                reset_velocity: true,
+                                attack_range_offset: 0.0,
+                            },
+                        ),
+                        TimeDivisions {
                             two: 0,
                             three: 0,
                             four: 0,
@@ -97,17 +99,20 @@ pub fn periodic_spawn(
                             fourteen: 0,
                             fifteen: 0,
                             reset: false,
-                        })
-                        .insert(CreatureUsefulVariables {
+                        },
+                        CreatureUsefulVariables {
                             chase_delay: 0,
                             attack_delay: 0,
-                        })
-                        .insert(CreatureStats{
+                        },
+                        CreatureStats{
                             life: 192.0,
-                        })
-                        .insert(RigidBody::KinematicPositionBased)
-                        .insert(Collider::cuboid(9.0, 5.0))
-                        .insert(CollisionGroups::new(Group::GROUP_3, Group::GROUP_1 | Group::GROUP_2))
+                        },
+                        (
+                            RigidBody::KinematicPositionBased,
+                            Collider::cuboid(9.0, 5.0),
+                            CollisionGroups::new(Group::GROUP_3, Group::GROUP_1 | Group::GROUP_2),
+                        ),
+                    ))
                         .id();
 
 
@@ -123,13 +128,13 @@ pub fn periodic_spawn(
 
                     let perfect_transitions = true;
                     let texture_handle_idle = asset_server.load("animations/creature/IcePaukIdle.png");
-                    let texture_atlas_idle = TextureAtlas::from_grid(texture_handle_idle, Vec2::new(90.0, 90.0), 17, 1);
+                    let texture_atlas_idle = TextureAtlas::from_grid(texture_handle_idle, Vec2::new(90.0, 90.0), 17, 1, None, None);
                     let texture_atlas_handle_idle = texture_atlases.add(texture_atlas_idle);
                     let texture_handle_walkf = asset_server.load("animations/creature/IcePaukWalk.png");
-                    let texture_atlas_walkf = TextureAtlas::from_grid(texture_handle_walkf, Vec2::new(90.0, 90.0), 10, 1);
+                    let texture_atlas_walkf = TextureAtlas::from_grid(texture_handle_walkf, Vec2::new(90.0, 90.0), 10, 1, None, None);
                     let texture_atlas_handle_walkf = texture_atlases.add(texture_atlas_walkf);
                     let texture_handle_atk = asset_server.load("animations/creature/IcePaukOffensiveAttack.png");
-                    let texture_atlas_atk = TextureAtlas::from_grid(texture_handle_atk, Vec2::new(90.0, 90.0), 11, 1);
+                    let texture_atlas_atk = TextureAtlas::from_grid(texture_handle_atk, Vec2::new(90.0, 90.0), 11, 1, None, None);
                     let texture_atlas_handle_atk = texture_atlases.add(texture_atlas_atk);
 
                     commands.insert_resource(MyCreatureAnimations {

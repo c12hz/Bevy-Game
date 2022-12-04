@@ -241,6 +241,7 @@ pub struct AnimationParams {
 
 
 // the jumpd and falld are for separate forward jump and fall animations that will be added soon
+#[derive(Resource)]
 pub struct MyPlayerAnimations {
     pub run: AnimationParams,
     pub idle: AnimationParams,

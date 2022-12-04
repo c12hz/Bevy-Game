@@ -1,9 +1,10 @@
+use std::time::Duration;
+
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
-//use iyes_loopless::prelude::*;
+use iyes_loopless::prelude::*;
 //use std::time::Duration;
 use bevy::window::PresentMode;
-use bevy::render::texture::ImageSettings;
 use bevy_inspector_egui::{WorldInspectorPlugin, RegisterInspectable};
 
 mod core;
@@ -51,18 +52,21 @@ use crate::creature::creature_death::*;
 fn main() {
     App::new()
         .insert_resource(Msaa { samples: 1 })
-        .insert_resource(
-            WindowDescriptor {
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            window: WindowDescriptor {
                 present_mode: PresentMode::Fifo,
                 title: core::GAME_NAME.to_string(),
                 resizable: true,
                 width: 1920.0,
                 height: 1080.0,
                 ..Default::default()
-            }
+            },
+            ..Default::default()
+        }).set(ImagePlugin::default_nearest()))
+        .add_fixed_timestep(
+            Duration::from_nanos(16666667),
+            "my_fixed",
         )
-        .insert_resource(ImageSettings::default_nearest())
-        .add_plugins(DefaultPlugins)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         //.add_plugin(RapierDebugRenderPlugin::default())
         .add_plugin(core::setup::SetupPlugin)
