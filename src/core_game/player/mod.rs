@@ -2,7 +2,7 @@ use bevy::{
     utils::Duration,
     prelude::*,
 };
-use iyes_loopless::prelude::FixedTimestepStage;
+use iyes_loopless::prelude::*;
 use bevy_inspector_egui::{WorldInspectorPlugin, RegisterInspectable};
 
 pub mod player_structs;
@@ -31,30 +31,21 @@ pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        let mut fixed_first = SystemStage::parallel();
-        fixed_first
-        .add_system(set_attack_state::set_attack_state.label("set_attack_state"))
-            .add_system(set_move_state::set_move_state.label("set_move_state").after("set_attack_state"))
-                .add_system(apply_player_state::apply_player_state.label("apply_state").after("set_move_state"))
-                    .add_system(movement_and_collisions::movement_and_collisions.label("move").after("apply_state"))
-                        .add_system(teleport_to_spawn::teleport_to_spawn.after("move"))
-                        .add_system(transfer_data::transfer_data.after("move"))
-                        .add_system(move_camera::move_camera.label("move_camera").after("move"))
-                            .add_system(screen_shake::screen_shake.after("move_camera"))
-                    .add_system(set_animation_state::set_animation_state.label("set_anim").after("apply_state"))           
-                        .add_system(switch_animation::switch_animation.label("switch_anim").after("set_anim"))
-                            .add_system(time_divisions::time_divisions.label("time").after("set_anim"))
-                                .add_system(animate::animate.after("time").label("animate"))
-                                    .add_system(player_deal_damage::player_deal_damage.after("animate").label("deal_damage"))
-                                        .add_system(reset_player_input::reset_player_input.after("deal_damage"));
-                                //.add_system(audio_test.after("time"))
-
-        app.add_stage_before(
-            CoreStage::Update,
-            "my_fixed_update",
-            FixedTimestepStage::new(Duration::from_nanos(16666667))
-                .with_stage(fixed_first)
-        );
+        app.add_fixed_timestep_system("my_fixed", 0, set_attack_state::set_attack_state.label("set_attack_state"))
+            .add_fixed_timestep_system("my_fixed", 0, set_move_state::set_move_state.label("set_move_state").after("set_attack_state"))
+                .add_fixed_timestep_system("my_fixed", 0, apply_player_state::apply_player_state.label("apply_state").after("set_move_state"))
+                    .add_fixed_timestep_system("my_fixed", 0, movement_and_collisions::movement_and_collisions.label("move").after("apply_state"))
+                        .add_fixed_timestep_system("my_fixed", 0, teleport_to_spawn::teleport_to_spawn.after("move"))
+                        .add_fixed_timestep_system("my_fixed", 0, transfer_data::transfer_data.after("move"))
+                        .add_fixed_timestep_system("my_fixed", 0, move_camera::move_camera.label("move_camera").after("move"))
+                            .add_fixed_timestep_system("my_fixed", 0, screen_shake::screen_shake.after("move_camera"))
+                    .add_fixed_timestep_system("my_fixed", 0, set_animation_state::set_animation_state.label("set_anim").after("apply_state"))           
+                        .add_fixed_timestep_system("my_fixed", 0, switch_animation::switch_animation.label("switch_anim").after("set_anim"))
+                            .add_fixed_timestep_system("my_fixed", 0, time_divisions::time_divisions.label("time").after("set_anim"))
+                                .add_fixed_timestep_system("my_fixed", 0, animate::animate.after("time").label("animate"))
+                                    .add_fixed_timestep_system("my_fixed", 0, player_deal_damage::player_deal_damage.after("animate").label("deal_damage"))
+                                        .add_fixed_timestep_system("my_fixed", 0, reset_player_input::reset_player_input.after("deal_damage"));
+                                //.add_fixed_timestep_system(audio_test.after("time"))
     }
 }
 

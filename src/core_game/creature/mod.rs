@@ -3,7 +3,7 @@ use bevy::{
     prelude::*,
 };
 
-use iyes_loopless::prelude::FixedTimestepStage;
+use iyes_loopless::prelude::*;
 
 pub mod creature_get_damage;
 pub mod set_creature_state;
@@ -25,28 +25,16 @@ pub struct CreaturePlugin;
 
 impl Plugin for CreaturePlugin{
     fn build(&self, app: &mut App) {
-
-        let mut fixed_second = SystemStage::parallel();
-        fixed_second
-        .add_system(set_creature_state::set_creature_state.label("set_c_state"))
-        .add_system(apply_creature_state::apply_creature_state.label("apply_c_state").after("set_c_state"))
-            .add_system(creature_movement::creature_movement.label("move").after("apply_c_state"))
-                .add_system(creature_reset_color::creature_reset_color.before("get_damage"))
-                .add_system(creature_get_damage::creature_get_damage.label("get_damage").after("deal_damage").after("move"))
-                .add_system(transfer_data_creature::transfer_data_creature.after("move"))
-                        .add_system(creature_switch_animation::creature_switch_animation.after("move").label("c_switch_anim"))
-                            .add_system(creature_time_divisions::creature_time_divisions.label("c_time").after("c_switch_anim"))
-                                .add_system(animate_creature::animate_creature.label("c_animate").after("c_time"))
-                                    .add_system(creature_death::creature_death.after("get_damage").after("c_animate"));
-
-
-        app.add_stage_before(
-            CoreStage::Update,
-            "my_fixed_update2",
-            FixedTimestepStage::new(Duration::from_nanos(16666667))
-                .with_stage(fixed_second)
-        );
-    
-
+        app
+        .add_fixed_timestep_system("my_fixed", 0, set_creature_state::set_creature_state.label("set_c_state"))
+        .add_fixed_timestep_system("my_fixed", 0, apply_creature_state::apply_creature_state.label("apply_c_state").after("set_c_state"))
+            .add_fixed_timestep_system("my_fixed", 0, creature_movement::creature_movement.label("move").after("apply_c_state"))
+                .add_fixed_timestep_system("my_fixed", 0, creature_reset_color::creature_reset_color.before("get_damage"))
+                .add_fixed_timestep_system("my_fixed", 0, creature_get_damage::creature_get_damage.label("get_damage").after("deal_damage").after("move"))
+                .add_fixed_timestep_system("my_fixed", 0, transfer_data_creature::transfer_data_creature.after("move"))
+                        .add_fixed_timestep_system("my_fixed", 0, creature_switch_animation::creature_switch_animation.after("move").label("c_switch_anim"))
+                            .add_fixed_timestep_system("my_fixed", 0, creature_time_divisions::creature_time_divisions.label("c_time").after("c_switch_anim"))
+                                .add_fixed_timestep_system("my_fixed", 0, animate_creature::animate_creature.label("c_animate").after("c_time"))
+                                    .add_fixed_timestep_system("my_fixed", 0, creature_death::creature_death.after("get_damage").after("c_animate"));
     }
 }

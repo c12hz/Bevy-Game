@@ -165,25 +165,26 @@ pub fn spawn_wall_collision(
                     // 2. the colliders will be despawned automatically when levels unload
                     for wall_rect in wall_rects {
                         level
-                            .spawn()
-                            .insert(Collider::cuboid(
+                            .spawn((
+                            Collider::cuboid(
                                 (wall_rect.right as f32 - wall_rect.left as f32 + 1.)
                                     * grid_size as f32
                                     / 2.,
                                 (wall_rect.top as f32 - wall_rect.bottom as f32 + 1.)
                                     * grid_size as f32
                                     / 2.,
-                            ))
-                            .insert(RigidBody::Fixed)
-                            .insert(Transform::from_xyz(
+                            ),
+                            RigidBody::Fixed,
+                            Transform::from_xyz(
                                 (wall_rect.left + wall_rect.right + 1) as f32 * grid_size as f32
                                     / 2.,
                                 (wall_rect.bottom + wall_rect.top + 1) as f32 * grid_size as f32
                                     / 2.,
                                 0.,
-                            ))
-                            .insert(CollisionGroups::new(Group::GROUP_1, Group::GROUP_2 | Group::GROUP_3))
-                            .insert(GlobalTransform::default());
+                            ),
+                            CollisionGroups::new(Group::GROUP_1, Group::GROUP_2 | Group::GROUP_3),
+                            GlobalTransform::default()
+                        ));
                     }
                 });
             }

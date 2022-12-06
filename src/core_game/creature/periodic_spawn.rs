@@ -164,21 +164,21 @@ pub fn periodic_spawn(
 
                     // spawn the entity
                     let e_graphics = commands
-                        .spawn_bundle(SpriteSheetBundle {
+                        .spawn(((SpriteSheetBundle {
                             texture_atlas: texture_atlas_handle_idle.clone(),
                             transform: Transform::from_translation(Vec3::new(0.0, 0.0, 0.0)),
                             visibility: Visibility { is_visible: true },
                             ..Default::default()
-                        })
-                        .insert(CreatureGraphics)
-                        .insert(AnimationParams {
+                        }),
+                        (CreatureGraphics),
+                        (AnimationParams {
                             atlas: texture_atlas_handle_idle.clone(),
                             start: 0,
                             restart: 0,
                             end: 0,
                             perfect_transitions,
-                        })
-                        .insert(TimeDivisions {
+                        }),
+                        (TimeDivisions {
                             two: 0,
                             three: 0,
                             four: 0,
@@ -194,8 +194,7 @@ pub fn periodic_spawn(
                             fourteen: 0,
                             fifteen: 0,
                             reset: false,
-                        })
-                        .id();
+                        }))).id();
 
                     commands.entity(e_creature)
                         .insert(CreatureGraphicsEntity(e_graphics));
