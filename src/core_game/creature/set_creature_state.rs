@@ -19,7 +19,6 @@ use crate::core_game::player::player_structs::Player;
 
 
 pub fn set_creature_state (
-    mut commands: Commands,
     mut query: Query<(Entity, &Collider, &Transform, &mut CreatureState, &mut CreatureStateVariables), With<Creature>>,
     query_player: Query<&StealthMode, With<Player>>,
     rapier_context: Res<RapierContext>,

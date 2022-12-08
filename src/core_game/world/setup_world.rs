@@ -6,7 +6,7 @@ pub fn setup_world (
     mut commands: Commands, asset_server: Res<AssetServer>
 ) {
     commands.spawn(LdtkWorldBundle {
-        ldtk_handle: asset_server.load("GameNew.ldtk"),
+        ldtk_handle: asset_server.load("GameV3.ldtk"),
         ..Default::default()
     });
 }

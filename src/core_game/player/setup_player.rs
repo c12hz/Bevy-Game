@@ -152,13 +152,13 @@ pub fn setup_player(
 
             },
             PlayerWeapons {
-                melee: PlayerWeaponMelee::None,
-                ranged: PlayerWeaponRanged::None,
+                melee: PlayerWeaponMelee::Hammer,
+                ranged: PlayerWeaponRanged::Guns,
             },
             PlayerAbilities {
-                ability1: Ability::None,
-                ability2: Ability::None,
-                ability3: Ability::None,
+                ability1: Ability::MeleeBasic,
+                ability2: Ability::RangedBasic,
+                ability3: Ability::DashForward,
             },
             RigidBody::KinematicPositionBased,
             Collider::cuboid(2.0, 5.0),
@@ -424,21 +424,22 @@ pub fn setup_player(
         // spawn the entity
 
         commands
-            .spawn_bundle(SpriteSheetBundle {
-                texture_atlas: texture_atlas_handle.clone(),
-                transform: Transform::from_translation(Vec3::new(0.0, 0.0, 0.0)),
-                visibility: Visibility { is_visible: true },
-                ..Default::default()
-            })
-            .insert(PlayerGraphics)
-            .insert(AnimationParams {
+            .spawn((
+            SpriteSheetBundle {
+            texture_atlas: texture_atlas_handle.clone(),
+            transform: Transform::from_translation(Vec3::new(0.0, 0.0, 0.0)),
+            visibility: Visibility { is_visible: true },
+            ..Default::default()
+            },
+            PlayerGraphics,
+            AnimationParams {
                 atlas: texture_atlas_handle.clone(),
                 start: 0,
                 restart: 0,
                 end: 8,
                 perfect_transitions,
-            })
-            .insert(PlayerInput {
+            },
+            PlayerInput {
                 pressing_jump: false,
                 just_pressed_jump: false,
                 pressing_left: false,
@@ -457,8 +458,8 @@ pub fn setup_player(
                 just_pressed_skill4: false,
                 pressing_up: false,
                 just_pressed_up: false,
-            })
-            .insert(TimeDivisions {
+            },
+            TimeDivisions {
                 two: 0,
                 three: 0,
                 four: 0,
@@ -474,7 +475,7 @@ pub fn setup_player(
                 fourteen: 0,
                 fifteen: 0,
                 reset: false,
-            }
+            })
         );
     }
 }

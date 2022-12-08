@@ -48,7 +48,6 @@ pub fn animate(
                  sprite.index += 1;
                  if sprite.index >= params.end {
                     sprite.index = params.restart;
-                    println!("restart");
                  }
               }
 

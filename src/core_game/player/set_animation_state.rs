@@ -12,8 +12,6 @@ use crate::core_game::player::player_structs::PlayerDirectionState;
 use crate::core_game::player::player_structs::PlayerStateVariables;
 use crate::core_game::player::player_structs::Player;
 use crate::core_game::player::player_structs::PlayerAttackState;
-use crate::core_game::player::player_structs::WallKick;
-use crate::core_game::player::player_structs::PlayerInput;
 
 
 
@@ -29,15 +27,14 @@ use crate::core_game::player::player_structs::PlayerInput;
 
 
 pub fn set_animation_state (
-    mut query: Query<(&mut PlayerState, &mut PlayerStateVariables, &Collider, &Transform, &WallKick, &PlayerInput), With<Player>>,
+    mut query: Query<(&mut PlayerState, &mut PlayerStateVariables, &Collider, &Transform), With<Player>>,
     rapier_context: Res<RapierContext>,
-    keys: Res<Input<KeyCode>>,
 ) {
 
 
     let mut attacking = false;
 
-    for (mut state, mut var, collider, transform, wall, input) in query.iter_mut() {
+    for (mut state, mut var, collider, transform) in query.iter_mut() {
 
 
 

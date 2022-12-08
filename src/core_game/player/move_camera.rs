@@ -23,7 +23,7 @@ pub fn move_camera (
     let scalar_y = 0.05;
     let horizontal_offset = 24.0;
     let raycast = 16.0;
-    let box_ceilling = 72.0;
+    let box_ceilling = 32.0;
     let box_floor = -12.0;
 
 

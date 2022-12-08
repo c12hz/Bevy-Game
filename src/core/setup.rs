@@ -21,11 +21,6 @@ impl Plugin for SetupPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_loopless_state(states::AppState::Loading)
-            .add_plugin(fps_plugin::FPSPlugin)
-            .add_startup_system(setup_2dcamera);
+            .add_plugin(fps_plugin::FPSPlugin);
     }   
-}
-
-fn setup_2dcamera(mut commands: Commands) {
-    commands.spawn_bundle(Camera2dBundle::default());
 }

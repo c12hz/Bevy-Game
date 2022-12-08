@@ -14,7 +14,6 @@ pub fn animate_creature(
 ) {
     
     for (mut sprite, mut handle, params, time) in q.iter_mut() {
-        println!("ANIMATIONNN");
         // are we still doing the same animation?
         // check if the handle on the entity matches the one in params
         

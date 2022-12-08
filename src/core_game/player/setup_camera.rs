@@ -20,7 +20,7 @@ pub fn setup_camera(
             ..default()
         };
     
-        commands.spawn_bundle(Camera2dBundle {
+        commands.spawn(Camera2dBundle {
             projection: OrthographicProjection {
             scale: 1.0 / 8.0,
             ..default()

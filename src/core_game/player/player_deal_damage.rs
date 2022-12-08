@@ -28,7 +28,7 @@ pub fn player_deal_damage (
             let mbh_cast = 10.0;
             let mbs_cast = 10.0;
             let rbg_cast = 512.0;
-            let cooldown_timer = 5;
+            let cooldown_timer = 6;
             let mut hit_frame:usize = 1000;
             let mut flip_value = 0.0;
             let hammer_hit_frame:usize = 1;
@@ -75,8 +75,8 @@ pub fn player_deal_damage (
                     }
 
                     damage.dealt = true;
-                    damage.kind = DamageKind::Whirlwind;
-                    damage.kind_mult = stats.whirlwind_mult;
+                    damage.kind = DamageKind::Simple;
+                    damage.kind_mult = stats.simple_mult;
                     *cooldown = cooldown_timer;
                     damage.targets = targets;
                     damage.direction = flip_value
@@ -115,8 +115,8 @@ pub fn player_deal_damage (
                     }
 
                     damage.dealt = true;
-                    damage.kind = DamageKind::Whirlwind;
-                    damage.kind_mult = stats.whirlwind_mult;
+                    damage.kind = DamageKind::Simple;
+                    damage.kind_mult = stats.simple_mult;
                     *cooldown = cooldown_timer;
                     damage.targets = targets;
                     damage.direction = flip_value
@@ -129,7 +129,7 @@ pub fn player_deal_damage (
             //RANGED BASIC GUNS FORWARD DAMAGE
 
             if state.new.2 == PlayerAnimationState::RangedBasicGunsForward && *cooldown == 0 {
-                hit_frame = sword_hit_frame;
+                hit_frame = guns_hit_frame;
 
                 if sprite.index == hit_frame {
                     let mut targets = Vec::new();
@@ -156,8 +156,8 @@ pub fn player_deal_damage (
                     }
 
                     damage.dealt = true;
-                    damage.kind = DamageKind::Whirlwind;
-                    damage.kind_mult = stats.whirlwind_mult;
+                    damage.kind = DamageKind::Simple;
+                    damage.kind_mult = stats.simple_mult;
                     *cooldown = cooldown_timer;
                     damage.targets = targets;
                     damage.direction = flip_value

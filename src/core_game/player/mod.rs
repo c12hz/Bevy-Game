@@ -1,9 +1,5 @@
-use bevy::{
-    utils::Duration,
-    prelude::*,
-};
+use bevy::prelude::*;
 use iyes_loopless::prelude::*;
-use bevy_inspector_egui::{WorldInspectorPlugin, RegisterInspectable};
 
 pub mod player_structs;
 mod animate;

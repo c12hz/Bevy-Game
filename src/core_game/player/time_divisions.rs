@@ -23,7 +23,6 @@ pub fn time_divisions(
         time.reset = params.atlas != *handle; // resets the timer when animation changes
 
         if time.reset == true {
-            println!("restart");
             time.two = 0;
             time.three = 0;
             time.four = 0;

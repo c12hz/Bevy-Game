@@ -2,31 +2,13 @@ use std::time::Duration;
 
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
-
-use crate::core_game::creature::creature_structs::Creature;
-use crate::core_game::creature::creature_structs::CreatureGraphics;
-use crate::core_game::creature::creature_structs::MyCreatureAnimations;
-use crate::core_game::creature::creature_structs::AnimationParams;
-use crate::core_game::creature::creature_structs::Vel;
-use crate::core_game::creature::creature_structs::MoveSpeed;
-use crate::core_game::creature::creature_structs::CreatureMoveState;
-use crate::core_game::creature::creature_structs::CreatureDirectionState;
-use crate::core_game::creature::creature_structs::CreatureAnimationState;
-use crate::core_game::creature::creature_structs::CreatureState;
-use crate::core_game::creature::creature_structs::CreatureStateVariables;
 use crate::core_game::creature::creature_structs::CreatureSpawnPoint;
-use crate::core_game::creature::creature_structs::CreatureStats;
-
-use crate::core_game::creature::creature_structs::CreatureGraphicsEntity;
-use crate::core_game::creature::creature_structs::CreatureUsefulVariables;
 
 
 
 
 pub fn setup_creature(
     mut commands: Commands,
-    asset_server: Res<AssetServer>,
-    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
     query: Query<(Entity, &EntityInstance), Added<EntityInstance>>,
 ) {
     for (e, ldtk_entity_info) in query.iter() {

@@ -126,8 +126,6 @@ pub fn movement_and_collisions(
         }
 
         if collided == true {   
-        }
-
-        
+        }     
     }
 }

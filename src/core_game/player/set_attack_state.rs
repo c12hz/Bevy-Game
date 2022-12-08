@@ -1,18 +1,10 @@
 use bevy::prelude::*;
-use bevy_rapier2d::{
-    prelude::{Collider, InteractionGroups, QueryFilter, RapierContext},
-    rapier::prelude::Group,
-};
 
 
 use crate::core_game::player::player_structs::PlayerState;
 use crate::core_game::player::player_structs::PlayerMoveState;
-use crate::core_game::player::player_structs::PlayerDirectionState;
 use crate::core_game::player::player_structs::PlayerAttackState;
-use crate::core_game::player::player_structs::PlayerStateVariables;
 use crate::core_game::player::player_structs::Player;
-use crate::core_game::player::player_structs::StealthMode;
-use crate::core_game::player::player_structs::PlayerDamage;
 use crate::core_game::player::player_structs::PlayerInput;
 use crate::core_game::player::player_structs::Ability;
 use crate::core_game::player::player_structs::PlayerAbilities;
@@ -23,8 +15,7 @@ use crate::core_game::player::player_structs::PlayerWeapons;
 
 
 pub fn set_attack_state (
-    mut query: Query<(&Collider, &Transform, &PlayerDamage, &mut PlayerState, &mut PlayerStateVariables, &PlayerInput, &PlayerAbilities, &PlayerWeapons), With<Player>>,
-    rapier_context: Res<RapierContext>,
+    mut query: Query<(&mut PlayerState, &PlayerInput, &PlayerAbilities, &PlayerWeapons), With<Player>>,
     mut timer_mbh:  Local<u32>,
     mut timer_mbs:  Local<u32>,
     mut timer_rbbf: Local<u32>,
@@ -38,7 +29,7 @@ pub fn set_attack_state (
 
 
 
-    for (collider, transform, damage, mut state, mut var, input, ability, weapon) in query.iter_mut() {
+    for (mut state, input, ability, weapon) in query.iter_mut() {
 
         let mut skill = 0;
         let mut abil = ability.ability1;

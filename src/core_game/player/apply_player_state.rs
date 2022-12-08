@@ -30,7 +30,7 @@ use crate::core_game::player::player_structs::PlayerStateVariables;
 
 
 pub fn apply_player_state (
-    mut query: Query<(&PlayerState, &PlayerStateVariables, &MoveSpeed, &mut Vel, &mut Grav, &mut WallKick, &mut StealthMode, &mut PlayerInput), With<Player>>,
+    mut query: Query<(&PlayerState, &PlayerStateVariables, &MoveSpeed, &mut Vel, &mut Grav, &mut WallKick, &StealthMode, &PlayerInput), With<Player>>,
     mut query2: Query<&mut TextureAtlasSprite, With<PlayerGraphics>>,
 ){
 
@@ -38,7 +38,7 @@ pub fn apply_player_state (
     let mut looking_direction: f32 = 0.0;
 
 
-    for (state, var, speed, mut velocity, mut gravity, mut wall_kick, mut stealth, mut input) in query.iter_mut() {
+    for (state, var, speed, mut velocity, mut gravity, mut wall_kick, stealth, input) in query.iter_mut() {
         for mut sprite in query2.iter_mut() {
 
 

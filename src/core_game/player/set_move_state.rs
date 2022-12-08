@@ -41,12 +41,10 @@ pub fn set_move_state (
         let jump_pressed = input.pressing_jump;
         let stealth_mode = false;
         let whirl = false;
-        let dash = input.just_pressed_skill3;
-        let dash_strike = input.just_pressed_skill4;
 
 
         let mut move_direction = 0.0;
-        let raycast = 0.01001;
+        let raycast = 0.0101;
 
         let max_jumps = 2;
         let max_jump_duration = 24;
