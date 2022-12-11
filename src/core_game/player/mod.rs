@@ -40,8 +40,8 @@ impl Plugin for PlayerPlugin {
                             .add_fixed_timestep_system("my_fixed", 0, time_divisions::time_divisions.label("time").after("set_anim"))
                                 .add_fixed_timestep_system("my_fixed", 0, animate::animate.after("time").label("animate"))
                                     .add_fixed_timestep_system("my_fixed", 0, player_deal_damage::player_deal_damage.after("animate").label("deal_damage"))
-                                        .add_fixed_timestep_system("my_fixed", 0, reset_player_input::reset_player_input.after("deal_damage"));
-                                //.add_fixed_timestep_system(audio_test.after("time"))
+                                        .add_fixed_timestep_system("my_fixed", 0, reset_player_input::reset_player_input.after("deal_damage"))
+                                .add_fixed_timestep_system("my_fixed", 0, audio_test::audio_test.after("time"));
     }
 }
 

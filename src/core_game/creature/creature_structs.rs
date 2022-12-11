@@ -116,6 +116,7 @@ pub struct CreatureStateVariables {
     pub idle_timer: u32,
     pub reset_velocity: bool,
     pub attack_range_offset: f32,
+    pub isolated: bool,
 }
 
 

@@ -49,7 +49,7 @@ pub fn creature_get_damage (
                     // do stuff with the graphics here
 
                     if damage.dealt {
-                        *timer = 5;
+                        *timer = 10;
                     }
                     if *timer > 0 {
                         sprite.color = Color::Rgba {

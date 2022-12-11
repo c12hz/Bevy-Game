@@ -24,6 +24,8 @@ pub fn set_attack_state (
     mut timer_rbgu: Local<u32>,
     mut timer_df:   Local<u32>,
     mut timer_dd45: Local<u32>,
+    mut cooldown_df: Local<u32>,
+    mut cooldown_dd45: Local<u32>,
 ) {
     
 
@@ -53,14 +55,19 @@ pub fn set_attack_state (
             up = true;
         }
 
+
         let frame_length:u32 = 5;
 
+
+        // TIMER LENGTHS (IN 12FPS FRAMES)
         let mbh:u32 =  5;
         let mbs:u32 =  3;
         let rbb:u32 =  4;
         let rbg:u32 =  3;
         let df:u32  =  1;
         let dd45:u32 = 10;
+        let cooldown_df_max:u32 = 6;
+        let cooldown_dd45_max:u32 = 12;
 
         if *timer_mbh | *timer_mbs | *timer_rbbf | *timer_rbbu | *timer_rbgf | *timer_rbgu | *timer_df | *timer_dd45 != 0 {
             attack_timers_active = true;
@@ -107,18 +114,17 @@ pub fn set_attack_state (
                 }
             }
 
-            if abil == Ability::DashForward {
+            if abil == Ability::DashForward && *cooldown_df == 0 {
                 *timer_df = df * frame_length;
             }
 
-            if abil == Ability::DashDown45 {
+            if abil == Ability::DashDown45 && *cooldown_dd45 == 0 {
                 *timer_dd45 = dd45 * frame_length;
             }
         }
 
 
         // SET STATES BASED ON TIMERS
-
         if *timer_mbh > 0 {
             state.old.3 = state.new.3;
             state.new.3 = PlayerAttackState::MeleeBasicHammer;
@@ -153,10 +159,16 @@ pub fn set_attack_state (
             state.old.3 = state.new.3;
             state.new.3 = PlayerAttackState::DashForward;
         }
+        if *timer_df == df {
+            *cooldown_df = cooldown_df_max * frame_length;
+        }
 
         if *timer_dd45 > 0 {
             state.old.3 = state.new.3;
             state.new.3 = PlayerAttackState::DashDown45;
+        }
+        if *timer_dd45 == dd45 {
+            *cooldown_dd45 = cooldown_dd45_max * frame_length;
         }
 
         if !attack_timers_active {
@@ -169,8 +181,7 @@ pub fn set_attack_state (
 
 
 
-        // RESET TIMERS
-
+        // RESET TIMERS AND COOLDOWNS
         if *timer_mbh > 0 {
             *timer_mbh -= 1;
         }
@@ -201,6 +212,14 @@ pub fn set_attack_state (
 
         if *timer_dd45 > 0 {
             *timer_dd45 -= 1;
+        }
+
+        if *cooldown_df > 0 {
+            *cooldown_df -= 1;
+        }
+
+        if *cooldown_dd45 > 0 {
+            *cooldown_dd45 -= 1;
         }
     }
 }

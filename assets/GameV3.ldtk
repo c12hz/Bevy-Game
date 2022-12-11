@@ -1117,6 +1117,20 @@
 							"defUid": 147,
 							"px": [133,429],
 							"fieldInstances": []
+						},
+						{
+							"__identifier": "Creature1",
+							"__grid": [31,71],
+							"__pivot": [0,1],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#FF0000",
+							"iid": "71955ce0-5110-11ed-9200-6799c7ca9c92",
+							"width": 48,
+							"height": 24,
+							"defUid": 147,
+							"px": [191,429],
+							"fieldInstances": []
 						}
 					]
 				},

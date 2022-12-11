@@ -19,9 +19,9 @@ pub fn move_camera (
     qplayer: Query<(&Transform, &PlayerState, &Collider, &PlayerStateVariables), (With <Player>, Without <PlayerGraphics>, Without <Camera>)>,
     rapier_context: Res<RapierContext>,
 ){
-    let scalar_x = 0.1;
-    let scalar_y = 0.05;
-    let horizontal_offset = 24.0;
+    let scalar_x = 0.05;
+    let scalar_y = 0.025;
+    let horizontal_offset = 28.0;
     let raycast = 16.0;
     let box_ceilling = 32.0;
     let box_floor = -12.0;
@@ -33,10 +33,10 @@ pub fn move_camera (
 
             
 
-            let player_x = (player_transform.translation.x * 4.0) / 4.0;
-            let player_y = (player_transform.translation.y * 4.0) / 4.0;
+            let player_x = (player_transform.translation.x * 8.0) / 8.0;
+            let player_y = (player_transform.translation.y * 8.0) / 8.0;
             let distance = camera_var.new_ground_height - camera_transform.translation.y;
-            let velocity = (scalar_y * distance * 4.0).round() / 4.0;
+            let velocity = (scalar_y * distance * 8.0).round() / 8.0;
 
             
             
@@ -89,7 +89,7 @@ pub fn move_camera (
             //camera_transform.translation.y = camera_transform.translation.y + (camera_var.new_ground_height - camera_transform.translation.y) * scalar_y;
             camera_transform.translation.y += velocity;
             
-            camera_transform.translation = (camera_transform.translation * 4.0).round() / 4.0;
+            camera_transform.translation = (camera_transform.translation * 8.0).round() / 8.0;
 
             //dbg!(camera_transform.translation.x);
 

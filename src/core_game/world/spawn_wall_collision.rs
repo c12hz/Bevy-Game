@@ -180,7 +180,7 @@ pub fn spawn_wall_collision(
                                     / 2.,
                                 (wall_rect.bottom + wall_rect.top + 1) as f32 * grid_size as f32
                                     / 2.,
-                                0.,
+                                12.0,
                             ),
                             CollisionGroups::new(Group::GROUP_1, Group::GROUP_2 | Group::GROUP_3),
                             GlobalTransform::default()

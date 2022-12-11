@@ -396,7 +396,7 @@ pub fn apply_player_state (
                 velocity.y = 0.0;
                 velocity.x = 7.0 * looking_direction;
             }
-            if state.old.0 == PlayerMoveState::DashForward && state.new.0 == PlayerMoveState::Idle {
+            if state.old.0 == PlayerMoveState::DashForward && (state.new.0 == PlayerMoveState::Idle || state.new.0 == PlayerMoveState::Run) {
                 velocity.x = 0.0;
             }
 
@@ -406,6 +406,7 @@ pub fn apply_player_state (
             if state.new.0 == PlayerMoveState::DashDown45 {
                 velocity.y = -6.0;
                 velocity.x = 6.0 * looking_direction;
+                println!("X");
             }
             if state.old.0 == PlayerMoveState::DashDown45 && state.new.0 != PlayerMoveState::DashDown45 {
                 velocity.x = 0.0;
@@ -424,9 +425,8 @@ pub fn apply_player_state (
             // ADD "FRICTION" BETWEEN PLAYER AND ENEMIES
             if var.penetrating_enemy {
                 if !(state.new.0 == PlayerMoveState::DashForward || state.new.0 == PlayerMoveState::DashDown45) {
-                    velocity.x = ((velocity.x / 1.2) * 8.0).round() / 8.0;
+                    velocity.x = ((velocity.x / 1000.0) * 8.0).round() / 8.0;
                 }
-                
             }
         }
     }

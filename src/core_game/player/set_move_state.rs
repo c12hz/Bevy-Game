@@ -316,7 +316,7 @@ pub fn set_move_state (
 
         // DASH STRIKE STATE
 
-        if state.new.3 == PlayerAttackState::DashForward {
+        if state.new.3 == PlayerAttackState::DashDown45 {
             state.old.0 = state.new.0;
             state.new.0 = PlayerMoveState::DashDown45;
         }

@@ -22,13 +22,15 @@ pub fn set_creature_state (
     mut query: Query<(Entity, &Collider, &Transform, &mut CreatureState, &mut CreatureStateVariables), With<Creature>>,
     query_player: Query<&StealthMode, With<Player>>,
     rapier_context: Res<RapierContext>,
+    mut chase_timer: Local<u32>,
 ) {
     let mut rng = thread_rng();
 
 
+
     let aggro_range = 96.0;
     let attack_range = 0.0;
-
+    let chase_max_duration:u32 = 150;
 
     
     for (e, collider, transform, mut state, mut var) in query.iter_mut() {
@@ -79,6 +81,35 @@ pub fn set_creature_state (
             QueryFilter::default()
             .groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_2))
         );
+
+        let isolation_range_left = rapier_context.cast_shape(
+            transform.translation.truncate(),
+            0.0,
+            Vec2::new(-96.0, 0.0),
+            collider,
+            1.0,
+            QueryFilter::default()
+            .groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_3))
+        );
+
+        let isolation_range_right = rapier_context.cast_shape(
+            transform.translation.truncate(),
+            0.0,
+            Vec2::new(96.0, 0.0),
+            collider,
+            1.0,
+            QueryFilter::default()
+            .groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_3))
+        );
+
+
+        // 'ISOLATED' STATE
+        if isolation_range_left.is_some() || isolation_range_right.is_some() {
+            var.isolated = false;
+        }
+        else {
+            var.isolated = true;
+        }
 
 
         for stealth in query_player.iter() {
@@ -138,8 +169,7 @@ pub fn set_creature_state (
                             if let Some((player, toi2)) = look_right {
                                 if let TOIStatus::Converged = toi2.status {
                                     if (toi2.witness1.x - transform.translation.x).abs() < (toi1.witness1.x - transform.translation.x).abs() {
-                                        state.old.0 = state.new.0;
-                                        state.new.0 = CreatureMoveState::Chase;
+                                        *chase_timer = chase_max_duration;
                                         var.chase_direction = 1.0;
                                     }
                                     else {
@@ -152,8 +182,7 @@ pub fn set_creature_state (
                         }
                     }
                     else if collision_right.is_none() {
-                        state.old.0 = state.new.0;
-                        state.new.0 = CreatureMoveState::Chase;
+                        *chase_timer = chase_max_duration;
                         var.chase_direction = 1.0;
                     }
                 }
@@ -183,8 +212,7 @@ pub fn set_creature_state (
                             if let Some(((player, toi2))) = look_left {
                                 if let TOIStatus::Converged = toi2.status {
                                     if (toi2.witness1.x  - transform.translation.x).abs() < (toi1.witness1.x - transform.translation.x).abs() {
-                                        state.old.0 = state.new.0;
-                                        state.new.0 = CreatureMoveState::Chase;
+                                        *chase_timer = chase_max_duration;
                                         var.chase_direction = -1.0;
                                     }
                                     else {
@@ -197,11 +225,17 @@ pub fn set_creature_state (
                         }
                     }
                     else if collision_left.is_none() {
-                        state.old.0 = state.new.0;
-                        state.new.0 = CreatureMoveState::Chase;
+                        *chase_timer = chase_max_duration;
                         var.chase_direction = -1.0;
                     }
+                    
                 }
+            }
+
+            if *chase_timer > 0 {
+                state.old.0 = state.new.0;
+                state.new.0 = CreatureMoveState::Chase;
+                *chase_timer -= 1;
             }
     
             if (attack_range_right.is_some() || attack_range_left.is_some()) && !stealth.active {
