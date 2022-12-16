@@ -117,6 +117,7 @@ pub struct CreatureStateVariables {
     pub reset_velocity: bool,
     pub attack_range_offset: f32,
     pub isolated: bool,
+    pub sprite_direction: f32,
 }
 
 

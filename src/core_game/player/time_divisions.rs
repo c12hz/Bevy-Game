@@ -15,101 +15,102 @@ use crate::core_game::player::player_structs::PlayerGraphics;
 
     
 pub fn time_divisions(
-    mut query: Query<(&mut TimeDivisions, &Handle<TextureAtlas>, &AnimationParams), With<PlayerGraphics>>,
+    query: Query<(&Handle<TextureAtlas>, &AnimationParams), With<PlayerGraphics>>,
+    mut query2: Query<&mut TimeDivisions>,
 ) {
 
-    for (mut time, handle, params) in query.iter_mut() {
+    for (handle, params) in query.iter() {
+        for mut time in query2.iter_mut() {
 
-        time.reset = params.atlas != *handle; // resets the timer when animation changes
+            time.reset = params.atlas != *handle; // resets the timer when animation changes
 
-        if time.reset == true {
-            time.two = 0;
-            time.three = 0;
-            time.four = 0;
-            time.five = 0;
-            time.six = 0;
-            time.seven = 0;
-            time.eight = 0;
-            time.nine = 0;
-            time.ten = 0;
-            time.eleven = 0;
-            time.twelve = 0;
-            time.thirteen = 0;
-            time.fourteen = 0;
-            time.fifteen = 0;
-        }
-        
-        time.two += 1;
-        time.three += 1;
-        time.four += 1;
-        time.five += 1;
-        time.six += 1;
-        time.seven += 1;
-        time.eight += 1;
-        time.nine += 1;
-        time.ten += 1;
-        time.eleven += 1;
-        time.twelve += 1;
-        time.thirteen += 1;
-        time.fourteen += 1;
-        time.fifteen += 1;
-
-        if time.two >= 2 {
-            time.two = 0;
-        }
-
-        if time.three >= 3 {
-            time.three = 0;
-        }
-
-        if time.four >= 4 {
-            time.four = 0;
-        }
-
-        if time.five >= 5 {
-            time.five = 0;
-        }
-
-        if time.six >= 6 {
-            time.six = 0;
-        }
-
-        if time.seven >= 7 {
-            time.seven = 0;
-        }
-
-        if time.eight >= 8 {
-            time.eight = 0;
-        }
-
-        if time.nine >= 9 {
-            time.nine = 0;
-        }
-
-        if time.ten >= 10 {
-            time.ten = 0;
-        }
-
-        if time.eleven >= 11 {
-            time.eleven = 0;
-        }
-
-        if time.twelve >= 12 {
-            time.twelve = 0;
-        }
-
-        if time.thirteen >= 13 {
-            time.thirteen = 0;
-        }
-
-        if time.fourteen >= 14 {
-            time.fourteen = 0;
-        }
-
-        if time.fifteen >= 15 {
-            time.fifteen = 0;
-        }
-
+            if time.reset == true {
+                time.two = 0;
+                time.three = 0;
+                time.four = 0;
+                time.five = 0;
+                time.six = 0;
+                time.seven = 0;
+                time.eight = 0;
+                time.nine = 0;
+                time.ten = 0;
+                time.eleven = 0;
+                time.twelve = 0;
+                time.thirteen = 0;
+                time.fourteen = 0;
+                time.fifteen = 0;
+            }
             
+            time.two += 1;
+            time.three += 1;
+            time.four += 1;
+            time.five += 1;
+            time.six += 1;
+            time.seven += 1;
+            time.eight += 1;
+            time.nine += 1;
+            time.ten += 1;
+            time.eleven += 1;
+            time.twelve += 1;
+            time.thirteen += 1;
+            time.fourteen += 1;
+            time.fifteen += 1;
+    
+            if time.two >= 2 {
+                time.two = 0;
+            }
+    
+            if time.three >= 3 {
+                time.three = 0;
+            }
+    
+            if time.four >= 4 {
+                time.four = 0;
+            }
+    
+            if time.five >= 5 {
+                time.five = 0;
+            }
+    
+            if time.six >= 6 {
+                time.six = 0;
+            }
+    
+            if time.seven >= 7 {
+                time.seven = 0;
+            }
+    
+            if time.eight >= 8 {
+                time.eight = 0;
+            }
+    
+            if time.nine >= 9 {
+                time.nine = 0;
+            }
+    
+            if time.ten >= 10 {
+                time.ten = 0;
+            }
+    
+            if time.eleven >= 11 {
+                time.eleven = 0;
+            }
+    
+            if time.twelve >= 12 {
+                time.twelve = 0;
+            }
+    
+            if time.thirteen >= 13 {
+                time.thirteen = 0;
+            }
+    
+            if time.fourteen >= 14 {
+                time.fourteen = 0;
+            }
+    
+            if time.fifteen >= 15 {
+                time.fifteen = 0;
+            }
+        }
     }
 }

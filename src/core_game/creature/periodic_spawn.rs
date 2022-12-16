@@ -82,6 +82,7 @@ pub fn periodic_spawn(
                                 reset_velocity: true,
                                 attack_range_offset: 0.0,
                                 isolated:true,
+                                sprite_direction: 1.0,
                             },
                         ),
                         TimeDivisions {

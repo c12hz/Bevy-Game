@@ -38,6 +38,7 @@ pub fn apply_creature_state (
                 let mut rng = thread_rng();
 
 
+                
 
 
                 // PATROL

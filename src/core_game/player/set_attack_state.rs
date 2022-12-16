@@ -64,7 +64,7 @@ pub fn set_attack_state (
         let mbs:u32 =  3;
         let rbb:u32 =  4;
         let rbg:u32 =  3;
-        let df:u32  =  1;
+        let df:u32  =  2;
         let dd45:u32 = 10;
         let cooldown_df_max:u32 = 6;
         let cooldown_dd45_max:u32 = 12;

@@ -394,10 +394,13 @@ pub fn apply_player_state (
 
             if state.new.0 == PlayerMoveState::DashForward {
                 velocity.y = 0.0;
-                velocity.x = 7.0 * looking_direction;
+                velocity.x = 4.5 * looking_direction;
             }
-            if state.old.0 == PlayerMoveState::DashForward && (state.new.0 == PlayerMoveState::Idle || state.new.0 == PlayerMoveState::Run) {
+            if state.old.0 == PlayerMoveState::DashForward && state.new.0 == PlayerMoveState::Idle {
                 velocity.x = 0.0;
+            }
+            if state.old.0 == PlayerMoveState::DashForward && state.new.0 == PlayerMoveState::Run {
+                velocity.x = speed.x * looking_direction;
             }
 
 
