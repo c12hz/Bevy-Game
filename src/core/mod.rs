@@ -1,10 +1,10 @@
-pub mod setup;
-pub mod states;
 pub mod fps_plugin;
 pub mod resources;
+pub mod setup;
+pub mod states;
 
 pub mod prelude {
-    pub use crate::core::states;
+	pub use crate::core::states;
 }
 
 pub const GAME_NAME: &str = "GAME";
