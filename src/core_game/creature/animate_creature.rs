@@ -12,7 +12,7 @@ pub fn animate_creature(
 			&TimeDivisions,
 		),
 		With<CreatureGraphics>,
-	>,
+	>
 ) {
 	for (mut sprite, mut handle, params, time) in q.iter_mut() {
 		// are we still doing the same animation?

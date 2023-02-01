@@ -16,7 +16,7 @@ pub fn creature_time_divisions(
 	mut query: Query<
 		(&mut TimeDivisions, &Handle<TextureAtlas>, &AnimationParams),
 		With<CreatureGraphics>,
-	>,
+	>
 ) {
 	for (mut time, handle, params) in query.iter_mut() {
 		time.reset = params.atlas != *handle; // resets the timer when animation changes

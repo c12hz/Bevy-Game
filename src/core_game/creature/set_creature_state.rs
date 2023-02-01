@@ -60,17 +60,8 @@ pub fn set_creature_state(
 			QueryFilter::default().groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_2)),
 		);
 
-		let isolation_sensor = rapier_context.cast_shape(
-			transform.translation.truncate() - Vec2::new(sight_range, 0.0),
-			0.0,
-			Vec2::new(2.0 * sight_range, 0.0),
-			collider,
-			1.0,
-			QueryFilter::default().groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_3)),
-		);
-
 		// 'ISOLATED' STATE
-		if isolation_sensor.is_some() {
+		if true {
 			var.isolated = false;
 		} else {
 			var.isolated = true;

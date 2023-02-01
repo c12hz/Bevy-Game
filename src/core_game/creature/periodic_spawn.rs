@@ -115,7 +115,7 @@ pub fn periodic_spawn(
 								chase_delay: 0,
 								attack_delay: 0,
 							},
-							CreatureStats { life: 1152.0 },
+							CreatureStats { life: 500.0 },
 							(
 								RigidBody::KinematicPositionBased,
 								Collider::cuboid(9.0, 5.0),

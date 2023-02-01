@@ -11,7 +11,10 @@ use crate::core_game::player;
 pub struct WorldPlugin;
 
 impl Plugin for WorldPlugin {
-	fn build(&self, app: &mut App) {
+	fn build(
+		&self,
+		app: &mut App,
+	) {
 		app.add_startup_system(setup_world::setup_world.label("setup_world"))
 			.add_system(player::setup_player::setup_player.after("setup_world"))
 			.add_system(

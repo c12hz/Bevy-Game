@@ -29,6 +29,8 @@ use crate::core_game::player::player_structs::StealthMode;
 use crate::core_game::player::player_structs::TimeDivisions;
 use crate::core_game::player::player_structs::Vel;
 use crate::core_game::player::player_structs::WallKick;
+use crate::core_game::player::player_structs::PlayerCasts;
+
 
 use super::player_structs::SoundParams;
 
@@ -90,6 +92,19 @@ pub fn setup_player(
 					just_pressed_skill4: false,
 					pressing_up: false,
 					just_pressed_up: false,
+				},
+				PlayerCasts {
+					basic_up: false,
+					basic_down: false,
+					basic_left: false,
+					basic_right: false,
+					directional_x: false,
+					big_left: false,
+					big_right: false,
+					wallslide_anim_up: false,
+					wallslide_anim_down: false,
+					enemy_penetration: false,
+					nearby_enemies: 0,
 				},
 				Player,
 				PlayerStateVariables {

@@ -2,7 +2,7 @@ use crate::core_game::creature::creature_structs::CreatureGraphics;
 use bevy::prelude::*;
 
 pub fn creature_reset_color(
-	mut creature_graphics: Query<&mut TextureAtlasSprite, With<CreatureGraphics>>,
+	mut creature_graphics: Query<&mut TextureAtlasSprite, With<CreatureGraphics>>
 ) {
 	for mut sprite in creature_graphics.iter_mut() {
 		sprite.color = Color::Rgba {

@@ -1,8 +1,4 @@
 use bevy::prelude::*;
-use bevy_rapier2d::{
-	prelude::{Collider, InteractionGroups, QueryFilter, RapierContext},
-	rapier::prelude::Group,
-};
 
 use crate::core_game::player::player_structs::Player;
 use crate::core_game::player::player_structs::PlayerAnimationState;
@@ -10,6 +6,7 @@ use crate::core_game::player::player_structs::PlayerAttackState;
 use crate::core_game::player::player_structs::PlayerDirectionState;
 use crate::core_game::player::player_structs::PlayerMoveState;
 use crate::core_game::player::player_structs::PlayerState;
+use crate::core_game::player::player_structs::PlayerCasts;
 use crate::core_game::player::player_structs::PlayerStateVariables;
 
 // this function generates player states
@@ -27,16 +24,15 @@ pub fn set_animation_state(
 		(
 			&mut PlayerState,
 			&mut PlayerStateVariables,
-			&Collider,
+			&PlayerCasts,
 			&Transform,
 		),
 		With<Player>,
 	>,
-	rapier_context: Res<RapierContext>,
 ) {
 	let mut attacking = false;
 
-	for (mut state, mut var, collider, transform) in query.iter_mut() {
+	for (mut state, mut var, cast, transform) in query.iter_mut() {
 		if state.new.3 != PlayerAttackState::None {
 			attacking = true;
 		}
@@ -146,44 +142,12 @@ pub fn set_animation_state(
 		// WALL SLIDE ANIMATION STATE
 		if currently_transitioning == false && !attacking {
 			if state.new.0 == PlayerMoveState::WallSlide {
-				let mut side = 0.0;
-
-				if state.new.1 == PlayerDirectionState::Left {
-					side = -1.0;
-				}
-
-				if state.new.1 == PlayerDirectionState::Right {
-					side = 1.0;
-				}
-
-				let hit_ws_up = rapier_context.cast_shape(
-					Vec2::new(transform.translation.x, transform.translation.y)
-						+ Vec2::new(0.0, 18.0),
-					0.0,
-					Vec2::new(side, 0.0),
-					collider,
-					1.0,
-					QueryFilter::default()
-						.groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_1)),
-				);
-
-				let hit_ws_down = rapier_context.cast_shape(
-					Vec2::new(transform.translation.x, transform.translation.y)
-						+ Vec2::new(0.0, -18.0),
-					0.0,
-					Vec2::new(side, 0.0),
-					collider,
-					1.0,
-					QueryFilter::default()
-						.groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_1)),
-				);
-
-				if hit_ws_up.is_some() && hit_ws_down.is_some() {
+				if cast.wallslide_anim_up && cast.wallslide_anim_down {
 					state.old.2 = state.new.2;
 					state.new.2 = PlayerAnimationState::WallSlide;
 				}
 
-				if hit_ws_up.is_none() || hit_ws_down.is_none() {
+				if !cast.wallslide_anim_up || !cast.wallslide_anim_down {
 					state.old.2 = state.new.2;
 					state.new.2 = PlayerAnimationState::Fall;
 				}

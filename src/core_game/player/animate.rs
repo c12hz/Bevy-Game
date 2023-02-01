@@ -13,7 +13,7 @@ pub fn animate(
 			&TimeDivisions,
 		),
 		With<PlayerGraphics>,
-	>,
+	>
 ) {
 	for (mut sprite, mut handle, params, time) in q.iter_mut() {
 		// are we still doing the same animation?

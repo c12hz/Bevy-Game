@@ -16,7 +16,10 @@ pub(crate) enum FrameCounterState {
 pub struct FPSPlugin;
 
 impl Plugin for FPSPlugin {
-	fn build(&self, app: &mut App) {
+	fn build(
+		&self,
+		app: &mut App,
+	) {
 		app.add_plugin(FrameTimeDiagnosticsPlugin)
 			.add_loopless_state(FrameCounterState::Disabled)
 			.add_enter_system(FrameCounterState::Enabled, create_fps_counter)
@@ -26,7 +29,10 @@ impl Plugin for FPSPlugin {
 	}
 }
 
-fn create_fps_counter(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn create_fps_counter(
+	mut commands: Commands,
+	asset_server: Res<AssetServer>,
+) {
 	let txt_style: TextStyle = TextStyle {
 		font: asset_server.load("fonts/GravityBold.ttf"),
 		font_size: 12.0,
@@ -47,7 +53,10 @@ fn create_fps_counter(mut commands: Commands, asset_server: Res<AssetServer>) {
 		.insert(FrameCounterTag);
 }
 
-fn remove_fps_counter(mut commands: Commands, mut query: Query<Entity, With<FrameCounterTag>>) {
+fn remove_fps_counter(
+	mut commands: Commands,
+	mut query: Query<Entity, With<FrameCounterTag>>,
+) {
 	for entity in query.iter_mut() {
 		commands.entity(entity).despawn();
 	}

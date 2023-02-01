@@ -13,7 +13,10 @@ use crate::core::*;
 pub struct SetupPlugin;
 
 impl Plugin for SetupPlugin {
-	fn build(&self, app: &mut App) {
+	fn build(
+		&self,
+		app: &mut App,
+	) {
 		app.add_loopless_state(states::AppState::Loading)
 			.add_plugin(fps_plugin::FPSPlugin);
 	}

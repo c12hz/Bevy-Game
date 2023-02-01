@@ -59,6 +59,21 @@ pub struct PlayerInput {
 	pub just_pressed_up: bool,
 }
 
+#[derive(Component, Clone)]
+pub struct PlayerCasts {
+	pub basic_up: bool,
+	pub basic_down: bool,
+	pub basic_left: bool,
+	pub basic_right: bool,
+	pub directional_x: bool,
+	pub big_left: bool,
+	pub big_right: bool,
+	pub wallslide_anim_up: bool,
+	pub wallslide_anim_down: bool,
+	pub enemy_penetration: bool,
+	pub nearby_enemies: usize,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum PlayerMoveState {
 	Idle,

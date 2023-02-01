@@ -1,14 +1,11 @@
 use bevy::prelude::*;
-use bevy_rapier2d::{
-	prelude::{Collider, InteractionGroups, QueryFilter, RapierContext},
-	rapier::prelude::Group,
-};
 
 use crate::core_game::player::player_structs::CameraVariables;
 use crate::core_game::player::player_structs::Player;
 use crate::core_game::player::player_structs::PlayerGraphics;
 use crate::core_game::player::player_structs::PlayerMoveState;
 use crate::core_game::player::player_structs::PlayerState;
+use crate::core_game::player::player_structs::PlayerCasts;
 
 use crate::core_game::player::player_structs::PlayerStateVariables;
 
@@ -18,48 +15,27 @@ pub fn move_camera(
 		(With<Camera>, Without<Player>, Without<PlayerGraphics>),
 	>,
 	qplayer: Query<
-		(&Transform, &PlayerState, &Collider, &PlayerStateVariables),
+		(&Transform, &PlayerState, &PlayerCasts, &PlayerStateVariables),
 		(With<Player>, Without<PlayerGraphics>, Without<Camera>),
 	>,
-	rapier_context: Res<RapierContext>,
 ) {
 	let scalar_x = 0.05;
 	let scalar_y = 0.025;
 	let horizontal_offset = 28.0;
-	let raycast = 16.0;
 	let box_ceilling = 32.0;
 	let box_floor = -12.0;
 
-	for (player_transform, state, collider, var) in qplayer.iter() {
+	for (player_transform, state, cast, var) in qplayer.iter() {
 		for (mut camera_transform, mut camera_var) in qcamera.iter_mut() {
 			let player_x = (player_transform.translation.x * 8.0) / 8.0;
 			let player_y = (player_transform.translation.y * 8.0) / 8.0;
 			let distance = camera_var.new_ground_height - camera_transform.translation.y;
 			let velocity = (scalar_y * distance * 8.0).round() / 8.0;
 
-			let hit_right = rapier_context.cast_shape(
-				player_transform.translation.truncate(),
-				0.0,
-				Vec2::new(raycast, 0.0),
-				collider,
-				1.0,
-				QueryFilter::default()
-					.groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_1)),
-			);
-
-			let hit_left = rapier_context.cast_shape(
-				player_transform.translation.truncate(),
-				0.0,
-				Vec2::new(-raycast, 0.0),
-				collider,
-				1.0,
-				QueryFilter::default()
-					.groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_1)),
-			);
 
 			let is_wall_jumping = (state.new.0 == PlayerMoveState::Jump
 				|| state.new.0 == PlayerMoveState::Fall)
-				&& (hit_left.is_some() || hit_right.is_some())
+				&& (cast.big_left || cast.big_right)
 				&& var.walljump_counter > 0;
 
 			if var.sprite_flipped == false && is_wall_jumping == false {

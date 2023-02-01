@@ -2,7 +2,10 @@ use bevy::prelude::*;
 
 use crate::core_game::player::player_structs::PlayerInput;
 
-pub fn get_player_input(mut qinput: Query<&mut PlayerInput>, keys: Res<Input<KeyCode>>) {
+pub fn get_player_input(
+	mut qinput: Query<&mut PlayerInput>,
+	keys: Res<Input<KeyCode>>,
+) {
 	for mut input in qinput.iter_mut() {
 		// RESET 'PRESSING' INPUTS
 		input.pressing_jump = false;
