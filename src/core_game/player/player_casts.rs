@@ -223,8 +223,8 @@ pub fn player_casts (
             let hit_left = rapier_context.cast_shape(
                 transform.translation.truncate(),
                 0.0,
-                Vec2::new(-100.0, 0.0),
-                &Collider::cuboid(2.0, 36.0),
+                Vec2::new(-45.0, 0.0),
+                collider,
                 1.0,
                 QueryFilter::default()
                 .groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_3))
@@ -233,8 +233,8 @@ pub fn player_casts (
             let hit_right = rapier_context.cast_shape(
                 transform.translation.truncate(),
                 0.0,
-                Vec2::new(100.0, 0.0),
-			 &Collider::cuboid(2.0, 36.0),
+                Vec2::new(45.0, 0.0),
+			 collider,
                 1.0,
                 QueryFilter::default()
                 .groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_3))

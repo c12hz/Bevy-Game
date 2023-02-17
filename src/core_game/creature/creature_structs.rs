@@ -33,12 +33,32 @@ pub struct CreatureSpawnPoint {
 	pub min_free_range: f32,
 }
 
+#[derive(Component, Clone)]
+pub struct CreatureCasts {
+	pub basic_right: bool,
+	pub basic_left: bool,
+	pub down_right: bool,
+	pub down_left: bool,
+	pub sight_range: bool,
+	pub sight_new: bool,
+	pub sight_old: bool,
+	pub chase_range: bool,
+	pub attack_range: bool,
+	pub attack_offset: f32,
+	pub retreat_range: bool,
+	pub defence_range: bool,
+	pub help_range: bool,
+}
+
 #[derive(Component, Debug, Clone, Copy, PartialEq)]
 pub enum CreatureMoveState {
 	Idle,
 	Patrol,
 	Chase,
 	Attack,
+	Retreat,
+	RangedAttack,
+	Defence,
 }
 
 #[derive(Component, Debug, Clone, Copy, PartialEq)]
@@ -61,6 +81,7 @@ pub struct AnimationParams {
 	pub start: usize,
 	pub restart: usize,
 	pub end: usize,
+	pub looping: bool,
 	pub perfect_transitions: bool,
 }
 
@@ -69,6 +90,9 @@ pub struct MyCreatureAnimations {
 	pub idle: AnimationParams,
 	pub walkf: AnimationParams,
 	pub atk: AnimationParams,
+	pub retreat: AnimationParams,
+	pub ranged: AnimationParams,
+	pub defence: AnimationParams,
 }
 
 #[derive(Component, Clone)]
@@ -107,12 +131,18 @@ pub struct CreatureState {
 #[derive(Component)]
 pub struct CreatureStateVariables {
 	pub chase_direction: f32,
+	pub chase_timer: u32,
 	pub patrol_timer: u32,
 	pub idle_timer: u32,
+	pub retreat_timer: f32,
+	pub retreating_attack_timer: u32,
 	pub reset_velocity: bool,
 	pub attack_range_offset: f32,
 	pub isolated: bool,
 	pub sprite_direction: f32,
+	pub switch: bool,
+	pub switch2: bool,
+	pub distance_from_player: f32,
 }
 
 #[derive(Component, Clone)]

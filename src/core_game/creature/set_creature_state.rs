@@ -1,95 +1,164 @@
 use bevy::prelude::*;
-use bevy_rapier2d::{
-	prelude::{Collider, InteractionGroups, QueryFilter, RapierContext, TOIStatus},
-	rapier::prelude::Group,
-};
 use rand::{thread_rng, Rng};
 
 use crate::core_game::creature::creature_structs::Creature;
+use crate::core_game::creature::creature_structs::CreatureCasts;
 use crate::core_game::creature::creature_structs::CreatureMoveState;
 use crate::core_game::creature::creature_structs::CreatureState;
 use crate::core_game::creature::creature_structs::CreatureStateVariables;
 
 use crate::core_game::player::player_structs::Player;
+use crate::core_game::player::player_structs::PlayerCasts;
 use crate::core_game::player::player_structs::StealthMode;
 
 pub fn set_creature_state(
 	mut query: Query<
 		(
 			Entity,
-			&Collider,
 			&Transform,
 			&mut CreatureState,
 			&mut CreatureStateVariables,
+			& CreatureCasts,
 		),
 		With<Creature>,
 	>,
-	query_player: Query<(&Transform, &StealthMode), With<Player>>,
-	rapier_context: Res<RapierContext>,
-	mut chase_timer: Local<u32>,
+	query_player: Query<(&Transform, &StealthMode, &PlayerCasts), With<Player>>,
 ) {
-	let mut rng = thread_rng();
+	
+	for (e, transform, mut state, mut var, cast) in query.iter_mut() {
+		let mut rng = thread_rng();
+		var.isolated = true;
 
-	let sight_range = 96.0;
-	let attack_range = 0.0;
-	let chase_max_duration: u32 = 150;
-
-	for (e, collider, transform, mut state, mut var) in query.iter_mut() {
-		let patrol_duration: u32 = rng.gen_range(100..=300);
-		let idle_duration: u32 = rng.gen_range(50..=150);
-
-		if state.new.0 == CreatureMoveState::Chase && state.old.0 != CreatureMoveState::Chase {
-			var.attack_range_offset = rng.gen_range(0.0..=6.0);
-		}
-
-		let sight_sensor = rapier_context.cast_shape(
-			transform.translation.truncate() - Vec2::new(sight_range, 0.0),
-			0.0,
-			Vec2::new(2.0 * sight_range, 0.0),
-			collider,
-			1.0,
-			QueryFilter::default().groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_2)),
-		);
-
-		let attack_sensor = rapier_context.cast_shape(
-			transform.translation.truncate() - Vec2::new(attack_range, 0.0),
-			0.0,
-			Vec2::new(2.0 * attack_range - var.attack_range_offset, 0.0),
-			collider,
-			1.0,
-			QueryFilter::default().groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_2)),
-		);
-
-		// 'ISOLATED' STATE
-		if true {
-			var.isolated = false;
-		} else {
-			var.isolated = true;
-		}
-
-		for (transform_player, stealth) in query_player.iter() {
-			if sight_sensor.is_none() || stealth.active {
-				state.old.0 = state.new.0;
-				state.new.0 = CreatureMoveState::Patrol;
+		for (transform_player, stealth, player_cast) in query_player.iter() {
+			
+			var.distance_from_player = (transform_player.translation.x - transform.translation.x).abs();
+			
+			
+			
+			// PATROL STATE 			
+			if !cast.sight_range && var.chase_timer == 0 || stealth.active {
+				if !var.switch && var.idle_timer == 0 {
+					var.patrol_timer = rng.gen_range(100..=300);
+					var.switch = true;
+				}
+				if var.patrol_timer > 0 {
+					state.old.0 = state.new.0;
+					state.new.0 = CreatureMoveState::Patrol;
+					var.patrol_timer -= 1;
+				}
+			}
+			
+			
+			
+			// IDLE STATE
+			if !cast.sight_range && var.chase_timer == 0 || stealth.active {
+				if var.switch && var.patrol_timer == 0 {
+					var.idle_timer = rng.gen_range(50..=150);
+					var.switch = false;
+				}
+				if var.idle_timer > 0 {
+					state.old.0 = state.new.0;
+					state.new.0 = CreatureMoveState::Idle;
+					var.idle_timer -= 1;
+				}
+			}
+			
+			
+			
+			// 'ISOLATED' STATE
+			if player_cast.nearby_enemies > 1 {
+				var.isolated = false;
 			}
 
-			// CHASE
-
+			
+			
+			// CHASE STATE
 			if transform.translation.x < transform_player.translation.x {
 				var.chase_direction = 1.0;
 			} else {
 				var.chase_direction = -1.0;
 			}
-
-			if sight_sensor.is_some() && !stealth.active {
-				*chase_timer = 60;
+			if cast.chase_range && !stealth.active && !var.isolated && !cast.attack_range {
+				var.chase_timer = 180;
 			}
-
-			if *chase_timer > 0 {
+			if var.isolated {
+				var.chase_timer = 0;
+			}
+			if var.chase_timer > 0 {
+				var.chase_timer -= 1;
+				if !cast.attack_range && !var.isolated {
+					state.old.0 = state.new.0;
+					state.new.0 = CreatureMoveState::Chase;	
+				}
+			}
+			
+			
+			
+			// ATTACK STATE
+			if cast.attack_range && !var.isolated {
 				state.old.0 = state.new.0;
-				state.new.0 = CreatureMoveState::Chase;
-				*chase_timer -= 1;
+				state.new.0 = CreatureMoveState::Attack;
+			}	
+			
+
+			
+			
+			// RANGED ATTACK STATE
+			if cast.sight_range && var.isolated {
+				state.old.0 = state.new.0;
+				state.new.0 = CreatureMoveState::RangedAttack;
+				if var.switch2 && var.retreat_timer == 0.0 {
+					var.retreating_attack_timer = 75;
+					var.switch2 = false;
+				}
+				if var.retreating_attack_timer > 0 {
+					state.old.0 = state.new.0;
+					state.new.0 = CreatureMoveState::RangedAttack;
+					var.retreating_attack_timer -= 1;
+				}
+			} else {
+				var.switch2 = false;
+				var.retreat_timer = 0.0;
+				var.retreating_attack_timer = 0;
 			}
+			
+			// HELPING CHASE
+			if var.isolated && cast.help_range && var.distance_from_player >= 100.0 {
+				state.old.0 = state.new.0;
+				state.new.0 = CreatureMoveState::Chase;	
+			}
+			
+			
+			
+			// RETREAT STATE
+			if cast.retreat_range && var.isolated {
+				if !var.switch2 && var.retreating_attack_timer == 0 {
+					var.retreat_timer = rng.gen_range(50.0..=150.0);
+					var.retreat_timer = (var.retreat_timer / 50.0).round() * 50.0;
+					var.switch2 = true;
+				}
+				if var.retreat_timer > 0.0 {
+					state.old.0 = state.new.0;
+					state.new.0 = CreatureMoveState::Retreat;
+					var.retreat_timer -= 1.0;
+				}
+			} else {
+				var.switch2 = false;
+				var.retreat_timer = 0.0;
+				var.retreating_attack_timer = 0;
+			}
+				
+			
+			
+			
+			// DEFENCE STATE
+			if cast.defence_range && var.isolated {
+				state.old.0 = state.new.0;
+				state.new.0 = CreatureMoveState::Defence;
+			}
+			
+			//dbg!(state.new.0);
 		}
+
 	}
 }

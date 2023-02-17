@@ -9,25 +9,33 @@ use crate::core_game::player::player_structs::PlayerDamage;
 
 use crate::core_game::creature::creature_structs::CreatureGraphicsEntity;
 use crate::core_game::creature::creature_structs::CreatureStats;
+use crate::core_game::creature::creature_structs::CreatureState;
+
+use super::creature_structs::CreatureMoveState;
 
 pub fn creature_get_damage(
 	player: Query<(&PlayerDamage), With<Player>>,
 	mut creature: Query<
-		(&CreatureGraphicsEntity, &mut CreatureStats, &mut Transform),
+		(&CreatureGraphicsEntity, &mut CreatureStats, &mut Transform, &CreatureState),
 		With<Creature>,
 	>,
 	mut creature_graphics: Query<(&mut TextureAtlasSprite), With<CreatureGraphics>>,
 	mut timer: Local<u32>,
 	mut pushback_timer: Local<u32>,
 ) {
-	let pushback_velocity = 1.0;
+	let pushback_velocity = 0.25;
 	let mut rng = thread_rng();
 
 	for damage in player.iter() {
 		for target in damage.targets.iter() {
-			if let Ok((e_graphics, mut stats, mut transform)) = creature.get_mut(*target) {
+			if let Ok((e_graphics, mut stats, mut transform, state)) = creature.get_mut(*target) {
 				if damage.applied && stats.life > 0.0 {
-					stats.life -= damage.value;
+					if state.new.0 != CreatureMoveState::Defence {
+						stats.life -= damage.value;
+					}
+					if state.new.0 == CreatureMoveState::Defence {
+						stats.life -= damage.value / 2.0;
+					}
 					*pushback_timer = 10;
 				}
 
@@ -37,7 +45,9 @@ pub fn creature_get_damage(
 
 				if *pushback_timer > 0 {
 					if rng.gen_range(0..9) > 6 {
-						transform.translation.x += pushback_velocity * damage.direction;
+						if state.new.0 != CreatureMoveState::Defence {
+							transform.translation.x += pushback_velocity * damage.direction;
+						}
 					}
 					*pushback_timer -= 1;
 				}

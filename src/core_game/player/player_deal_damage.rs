@@ -33,6 +33,7 @@ pub fn player_deal_damage(
 			let mbh_cast = 10.0;
 			let mbs_cast = 10.0;
 			let rbg_cast = 512.0;
+			let mut bsc_atk_offset = 12.0;
 			let cooldown_timer = 6;
 			let mut hit_frame: usize = 1000;
 			let mut flip_value = 0.0;
@@ -47,6 +48,7 @@ pub fn player_deal_damage(
 			} else {
 				flip_value = 1.0
 			}
+			bsc_atk_offset *= flip_value;
 
 			//MELEE BASIC HAMMER DAMAGE
 
@@ -57,7 +59,7 @@ pub fn player_deal_damage(
 					let mut targets = Vec::new();
 					loop {
 						let hit_mbh = rapier_context.cast_shape(
-							transform.translation.truncate(),
+							transform.translation.truncate() + Vec2::new(bsc_atk_offset, 0.0),
 							0.0,
 							Vec2::new(mbh_cast * flip_value, 0.0),
 							collider,
@@ -92,7 +94,7 @@ pub fn player_deal_damage(
 					let mut targets = Vec::new();
 					loop {
 						let hit_mbs = rapier_context.cast_shape(
-							transform.translation.truncate(),
+							transform.translation.truncate() + Vec2::new(bsc_atk_offset, 0.0),
 							0.0,
 							Vec2::new(mbs_cast * flip_value, 0.0),
 							collider,
@@ -125,23 +127,18 @@ pub fn player_deal_damage(
 
 				if sprite.index == hit_frame {
 					let mut targets = Vec::new();
-					loop {
-						let hit_rbg = rapier_context.cast_shape(
-							transform.translation.truncate(),
-							0.0,
-							Vec2::new(rbg_cast * flip_value, 0.0),
-							collider,
-							1.0,
-							QueryFilter::default()
-								.groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_3))
-								.predicate(&|e| !targets.iter().any(|t| *t == e)),
-						);
+					let hit_rbg = rapier_context.cast_shape(
+						transform.translation.truncate() + Vec2::new(bsc_atk_offset, 0.0),
+						0.0,
+						Vec2::new(rbg_cast * flip_value, 0.0),
+						collider,
+						1.0,
+						QueryFilter::default()
+							.groups(InteractionGroups::new(Group::GROUP_2, Group::GROUP_3))
+					);
 
-						if let Some((entity, _toii)) = hit_rbg {
-							targets.push(entity);
-						} else {
-							break;
-						}
+					if let Some((entity, _toii)) = hit_rbg {
+						targets.push(entity);
 					}
 
 					damage.dealt = true;

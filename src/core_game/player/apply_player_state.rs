@@ -15,6 +15,8 @@ use crate::core_game::player::player_structs::WallKick;
 
 use crate::core_game::player::player_structs::PlayerStateVariables;
 
+use super::player_structs::PlayerAttackState;
+
 // This function applies the various movement related player states into actual variables like velocity etc.
 // Improtant to note is I'm handling gravity in a very weird way, but I quite like this solution
 // The value of gravity is always 1, and the strength of gravity depends on how often it is applied
@@ -412,7 +414,12 @@ pub fn apply_player_state(
 				if !(state.new.0 == PlayerMoveState::DashForward
 					|| state.new.0 == PlayerMoveState::DashDown45)
 				{
-					velocity.x = ((velocity.x / 1000.0) * 8.0).round() / 8.0;
+					if state.new.3 == PlayerAttackState::None {
+						velocity.x = ((velocity.x / 1.5) * 8.0).round() / 8.0;
+					}
+					else {
+						velocity.x = 0.0;
+					}
 				}
 			}
 		}

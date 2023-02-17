@@ -1,11 +1,8 @@
 use bevy::prelude::*;
-use bevy_rapier2d::{
-	prelude::{Collider, InteractionGroups, QueryFilter, RapierContext, TOIStatus},
-	rapier::prelude::Group,
-};
 use rand::{thread_rng, Rng};
 
 use crate::core_game::creature::creature_structs::Creature;
+use crate::core_game::creature::creature_structs::CreatureCasts;
 use crate::core_game::creature::creature_structs::CreatureGraphics;
 use crate::core_game::creature::creature_structs::CreatureMoveState;
 use crate::core_game::creature::creature_structs::CreatureState;
@@ -21,7 +18,6 @@ use crate::core_game::creature::creature_structs::CreatureGraphicsEntity;
 pub fn apply_creature_state(
 	mut query: Query<
 		(
-			&Collider,
 			&mut CreatureUsefulVariables,
 			&Transform,
 			&mut Vel,
@@ -29,52 +25,48 @@ pub fn apply_creature_state(
 			&CreatureState,
 			&CreatureStateVariables,
 			&CreatureGraphicsEntity,
+			&CreatureCasts
 		),
 		With<Creature>,
 	>,
 	mut query2: Query<&mut TextureAtlasSprite, With<CreatureGraphics>>,
 	mut query_player: Query<&Transform, With<Player>>,
-	rapier_context: Res<RapierContext>,
 	mut reset_velocity: Local<bool>,
 	mut chase_delay: Local<u32>,
 ) {
-	for (collider, mut othervar, transform, mut velocity, speed, state, var, cg) in query.iter_mut()
+	for (mut othervar, transform, mut velocity, speed, state, var, cg, cast) in query.iter_mut()
 	{
 		if let Ok(mut sprite) = query2.get_mut(cg.0) {
 			for transform_player in query_player.iter_mut() {
-				let raycast = 40.0;
 				let mut rng = thread_rng();
+				let mut on_edge = false;
+				let mut colliding = false;
+				let mut player_position = 0.0;
+				if !cast.down_left || !cast.down_right {
+					on_edge = true;
+				}
+				if cast.basic_left || cast.basic_right {
+					colliding = true;
+				}
+				if transform.translation.x - transform_player.translation.x < 0.0 {
+					player_position = 1.0
+				}
+				
+				if transform.translation.x - transform_player.translation.x > 0.0 {
+					player_position = -1.0
+				}
+				
+				
 
 				// PATROL
-
 				if state.new.0 == CreatureMoveState::Patrol {
-					let hit_right = rapier_context.cast_shape(
-						transform.translation.truncate() + Vec2::new(raycast, 0.0),
-						0.0,
-						Vec2::new(0.0, -1.0),
-						collider,
-						1.0,
-						QueryFilter::default()
-							.groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_1)),
-					);
-
-					let hit_left = rapier_context.cast_shape(
-						transform.translation.truncate() + Vec2::new(-raycast, 0.0),
-						0.0,
-						Vec2::new(0.0, -1.0),
-						collider,
-						1.0,
-						QueryFilter::default()
-							.groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_1)),
-					);
-
 					// simple patrolling from one platform edge to another
-					if hit_left.is_some() && hit_right.is_none() {
+					if cast.down_left && !cast.down_right {
 						velocity.x = -speed.x;
 						*reset_velocity = false;
 					}
 
-					if hit_left.is_none() && hit_right.is_some() {
+					if !cast.down_left && cast.down_right {
 						velocity.x = speed.x;
 						*reset_velocity = false;
 					}
@@ -84,7 +76,6 @@ pub fn apply_creature_state(
 					{
 						*reset_velocity = true;
 					}
-
 					if *reset_velocity == true {
 						if sprite.flip_x == true {
 							velocity.x = speed.x;
@@ -93,12 +84,11 @@ pub fn apply_creature_state(
 							velocity.x = -speed.x;
 						}
 					}
-
 					//random direction switching
 					if state.new.0 == CreatureMoveState::Patrol
 						&& state.old.0 != CreatureMoveState::Patrol
 					{
-						if hit_left.is_some() && hit_right.is_some() {
+						if cast.down_left && cast.down_right {
 							if rng.gen_range(0..9) > 4 {
 								velocity.x = velocity.x * -1.0;
 							}
@@ -106,8 +96,9 @@ pub fn apply_creature_state(
 					}
 				}
 
+				
+				
 				// IDLE
-
 				if state.new.0 == CreatureMoveState::Idle {
 					if velocity.x > 0.0 {
 						velocity.x -= 0.125;
@@ -118,8 +109,9 @@ pub fn apply_creature_state(
 					}
 				}
 
+				
+				
 				// CHASE
-
 				if state.new.0 == CreatureMoveState::Chase {
 					if state.old.0 != CreatureMoveState::Chase {
 						othervar.chase_delay = rng.gen_range(0..=25);
@@ -130,13 +122,20 @@ pub fn apply_creature_state(
 					if othervar.chase_delay > 0 {
 						othervar.chase_delay -= 1;
 					}
+					if !cast.down_right && player_position >= 0.0 {
+						velocity.x *= 0.0;
+					}
+					if !cast.down_left && player_position <= 0.0 {
+						velocity.x *= 0.0;
+					}
 				}
 				if state.new.0 != CreatureMoveState::Chase {
 					othervar.chase_delay = 0;
 				}
 
+				
+				
 				// ATTACK
-
 				if state.new.0 == CreatureMoveState::Attack {
 					velocity.x = 0.0;
 
@@ -153,42 +152,55 @@ pub fn apply_creature_state(
 				if state.new.0 != CreatureMoveState::Attack {
 					othervar.attack_delay = 0;
 				}
+				
+				
+				
+				// RETREAT
+				if state.new.0 == CreatureMoveState::Retreat {
+					if player_position == 1.0 {
+						velocity.x = -speed.x
+					}
+					if player_position == -1.0 {
+						velocity.x = speed.x;
+					}
+				}
+				
+				// RETREAT
+				if state.new.0 == CreatureMoveState::RangedAttack {
+					velocity.x = 0.0;
+				}
+				
+				
+				
+				// DEFENCE
+				if state.new.0 == CreatureMoveState::Defence {
+					velocity.x = 0.0;
+				}
 
+				
+				
 				// COLLISIONS
-
-				let collision_right = rapier_context.cast_shape(
-					transform.translation.truncate(),
-					0.0,
-					Vec2::new(velocity.x, 0.0),
-					collider,
-					1.0,
-					QueryFilter::default()
-						.groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_1)),
-				);
-
-				let collision_left = rapier_context.cast_shape(
-					transform.translation.truncate(),
-					0.0,
-					Vec2::new(velocity.x, 0.0),
-					collider,
-					1.0,
-					QueryFilter::default()
-						.groups(InteractionGroups::new(Group::GROUP_3, Group::GROUP_1)),
-				);
-
-				if collision_right.is_some() || collision_left.is_some() {
+				if colliding {
 					velocity.x *= -1.0;
 				}
 
+				
+				
 				// SPRITE FLIP
-
 				if velocity.x < 0.0 {
 					sprite.flip_x = false;
 				}
 				if velocity.x > 0.0 {
 					sprite.flip_x = true;
 				}
-
+				if state.new.0 == CreatureMoveState::Retreat || state.new.0 == CreatureMoveState::RangedAttack || state.new.0 == CreatureMoveState::Defence {
+					if player_position == 1.0 {
+						sprite.flip_x = true;
+					}
+					if player_position == -1.0 {
+						sprite.flip_x = false;
+					}
+				}
 				if state.new.0 == CreatureMoveState::Attack && sprite.index == 0 {
 					if transform.translation.x - transform_player.translation.x < 0.0 {
 						sprite.flip_x = true;

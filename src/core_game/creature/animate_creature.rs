@@ -29,7 +29,11 @@ pub fn animate_creature(
 				if params.atlas == *handle {
 					sprite.index += 1;
 					if sprite.index >= params.end {
-						sprite.index = params.restart;
+						if params.looping {
+							sprite.index = params.restart;
+						} else {
+							sprite.index = params.end - 1;
+						}
 					}
 				} else {
 					// we need to change to a different animation
@@ -42,7 +46,11 @@ pub fn animate_creature(
 				if time.five == 1 {
 					sprite.index += 1;
 					if sprite.index >= params.end {
-						sprite.index = params.restart;
+						if params.looping {
+							sprite.index = params.restart;
+						} else {
+							sprite.index = params.end - 1;
+						}
 					}
 				}
 			}

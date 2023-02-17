@@ -32,6 +32,18 @@ pub fn creature_switch_animation(
 				if state.new.0 == CreatureMoveState::Chase {
 					commands.entity(e).insert(anims.walkf.clone());
 				}
+		
+				if state.new.0 == CreatureMoveState::Retreat {
+					commands.entity(e).insert(anims.retreat.clone());
+				}
+				
+				if state.new.0 == CreatureMoveState::RangedAttack {
+					commands.entity(e).insert(anims.ranged.clone());
+				}
+				
+				if state.new.0 == CreatureMoveState::Defence {
+					commands.entity(e).insert(anims.defence.clone());
+				}
 			}
 		}
 	}
